@@ -1,0 +1,55 @@
+ <div class="hk-element hk-element-annoucement-main {{ block.settings.custom_class }} hk-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<div class="hk-element-annoucement hk-font-{{ block.settings.font_type }}">{{ block.settings.text }}</div>
+{% if block.settings.show_timer == true %}
+<span class="hk-countdown-wrapper">
+<span class="hk-countdown-js">
+<span class="hk-countdown-hour"><span class="hk-countdown-hour-js">12</span>HRS</span>
+<span class="hk-countdown-min"><span class="hk-countdown-min-js">12</span>MIN</span> 
+<span class="hk-countdown-sec"><span class="hk-countdown-sec-js">12</span>SEC</span>
+</span>
+</span>
+
+
+{% assign date = "now" | date: '%s' %}
+{% assign date_new = 1 | times: 24 | times: 60 | times: 60 %}
+<script defer="defer">
+  
+  // Set the date we're counting down to
+var countDownDate = new Date("{{date_new}}").getTime();
+
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+  // Get today's date and time
+  var now = new Date().getTime();
+    
+  // Find the distance between now and the count down date
+  var distance = countDownDate - now;
+    
+  // Time calculations for days, hours, minutes and seconds
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    if (hours<10) {
+	hours = '0'+hours;
+	}
+    if (minutes<10) {
+	minutes = '0'+minutes;
+	}
+    if (seconds<10) {
+	seconds = '0'+seconds;
+	}
+    
+    $('.hk-countdown-js .hk-countdown-hour-js').html(hours);
+    $('.hk-countdown-js .hk-countdown-min-js').html(minutes);
+    $('.hk-countdown-js .hk-countdown-sec-js').html(seconds);
+  // If the count down is over, write some text 
+  if (distance < 0) {
+    clearInterval(x);
+    //document.getElementById("demo").innerHTML = "EXPIRED";
+  }
+}, 1000);
+</script>
+{% endif %}
+</div>

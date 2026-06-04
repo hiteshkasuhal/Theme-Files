@@ -1,0 +1,38 @@
+<div class="hk-related-product-card-main">
+<div class="hk-related-product-card-main-inner">
+<div class="hk-related-product-card-flex">
+<div class="hk-related-product-card-left">
+<div class="hk-product-image">
+ {{ product.featured_image | image_url: width: 200 | image_tag:
+  loading: 'lazy',
+  fetchpriority: 'low',
+  alt: product.featured_image.alt,
+  widths: '375, 550, 750, 800'
+}} 
+</div>
+</div>
+<div class="hk-related-product-card-right">
+<div class="hk-product-rating"><svg xmlns="http://www.w3.org/2000/svg" width="92" height="19" viewBox="0 0 92 19" fill="none">
+  <path d="M9.126 0L11.1749 6.30591H17.8053L12.4412 10.2032L14.4901 16.5091L9.126 12.6118L3.76187 16.5091L5.81079 10.2032L0.446658 6.30591H7.07709L9.126 0Z" fill="#CAAD58"/>
+  <path d="M27.378 0L29.4269 6.30591H36.0573L30.6932 10.2032L32.7421 16.5091L27.378 12.6118L22.0138 16.5091L24.0627 10.2032L18.6986 6.30591H25.329L27.378 0Z" fill="#CAAD58"/>
+  <path d="M45.6299 0L47.6788 6.30591H54.3092L48.9451 10.2032L50.994 16.5091L45.6299 12.6118L40.2658 16.5091L42.3147 10.2032L36.9506 6.30591H43.581L45.6299 0Z" fill="#CAAD58"/>
+  <path d="M63.8819 0L65.9308 6.30591H72.5612L67.1971 10.2032L69.246 16.5091L63.8819 12.6118L58.5177 16.5091L60.5666 10.2032L55.2025 6.30591H61.8329L63.8819 0Z" fill="#CAAD58"/>
+  <path d="M82.1338 0L84.1827 6.30591H90.8132L85.449 10.2032L87.4979 16.5091L82.1338 12.6118L76.7697 16.5091L78.8186 10.2032L73.4545 6.30591H80.0849L82.1338 0Z" fill="#CAAD58"/>
+</svg><span><strong>{{ product.metafields.loox.avg_rating | default: 0 }}/5.0</strong> ({{ product.metafields.custom.reviews_quantity_count | default: 0 }})</span></div>
+<div class="hk-product-title"><a href="{{ product.url }}">{{ product.title }}</a></div>
+<div class="hk-product-price-flex">
+<div class="hk-product-price">{{ product.price | money_without_trailing_zeros }}{% if product.compare_at_price > product.price %}<s>{{ product.compare_at_price | money_without_trailing_zeros }}</s>{% endif %}</div>
+<div class="hk-product-price-badge">{{ product.metafields.custom.price_badge.value }}</div>
+</div>
+<div class="hk-product-bottom-flex">
+<div class="hk-product-inspired-by"><strong>Inspired by:</strong>{{ product.metafields.custom.scent.value }}</div>
+{% if product.available %}
+<button class="hk-button hk-atc-js" variant_id="{{ product.selected_or_first_available_variant.id }}" href="{{ product.url }}">ADD TO CART</button>
+{% else %}
+<button class="hk-button hk-sold-out">SOLD OUT</button>
+{% endif %}
+</div>
+</div>
+</div>
+</div>
+</div>

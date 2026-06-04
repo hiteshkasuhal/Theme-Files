@@ -1,0 +1,94 @@
+
+{%- style -%}
+
+.hk-section-bg-{{ section.id }} {
+    background-color:{{ section.settings.background_color }};
+    color:{{ section.settings.text_color }};
+    }
+{% if section.settings.background_image != blank %}
+.hk-section-bg-{{ section.id }} {
+      background-image:url({{section.settings.background_image | image_url}});
+    background-size: cover;
+    background-attachment: unset;
+    background-repeat: no-repeat;
+    background-position: center;
+    }
+  {% endif %}
+{% if section.settings.background_image_mobile != blank %}
+  @media screen and (max-width: 915px) {
+    .hk-section-bg-{{ section.id }} {
+      background-image:url({{section.settings.background_image_mobile | image_url}});
+    }
+  }
+  {% endif %}
+  @media screen and (max-width: 915px) {
+    .hk-section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+  @media screen and (min-width: 915px) {
+    .hk-section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }  
+{%- endstyle -%}
+
+
+<div class="hk-section-bg-{{ section.id }} hk-header {{ section.settings.custom_class }}" {% if section.settings.custom_id != blank %} id="{{ section.settings.custom_id }}" {% endif %}>
+  <div class="hk-container hk-section-{{ section.id }}-padding">
+    <div class="hk-header-content hk-text-{{ section.settings.text_alignment }}-desktop hk-text-{{ section.settings.text_alignment_mobile }}-mobile"> 
+        {%- for block in section.blocks -%} 
+            {%- case block.type -%} 
+                {%- when 'mobile_menu' -%} 
+                    {%  render 'hk-element-mobile-menu-icon', block:block %} 
+                {%- when 'logo' -%} 
+                    {%  render 'hk-element-logo', block:block %} 
+                {%- when 'cart' -%} 
+                    {%  render 'hk-element-cart-icon', block:block %} 
+            {%  endcase %}
+        {%  endfor %} 
+    </div>
+  </div>
+</div>
+{%- for block in section.blocks -%} 
+            {%- case block.type -%} 
+                {%- when 'mobile_menu' -%} 
+                    {%  render 'hk-element-mobile-menu', block:block %} 
+            {%  endcase %}
+        {%  endfor %} 
+{% schema %}
+{"name":"header","tag":"header","class":"header","settings":[
+    {"type":"header","content":"Design"},
+    {"type":"image_picker","id":"background_image","label":"Background image","info":"Recommended: 1920x1080px, JPG format, under 200KB"},
+    {"type":"image_picker","id":"background_image_mobile","label":"Background image (mobile)","info":"Recommended: 768x1024px, JPG format. Leave empty to use desktop image"},
+    {"type":"color","id":"background_color","label":"Background color","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text color","default":"#000000","info":"Must have sufficient contrast with background (check https://webaim.org/resources/contrastchecker/)"},
+    {"type":"header","content":"Layout"},
+    {"type":"select","id":"text_alignment","label":"Text alignment (desktop)","options":[{"value":"left","label":"Left"},{"value":"center","label":"Center"},{"value":"right","label":"Right"}],"default":"center"},
+    {"type":"range","id":"padding_top","min":0,"max":100,"step":1,"unit":"px","label":"Top spacing (desktop)","default":0},
+    {"type":"range","id":"padding_bottom","min":0,"max":100,"step":1,"unit":"px","label":"Bottom spacing (desktop)","default":0},
+    {"type":"header","content":"Mobile Settings"},
+    {"type":"select","id":"text_alignment_mobile","label":"Text alignment (mobile)","options":[{"value":"left","label":"Left"},{"value":"center","label":"Center"},{"value":"right","label":"Right"}],"default":"center"},
+    {"type":"range","id":"padding_top_mobile","min":0,"max":100,"step":1,"unit":"px","label":"Top spacing (mobile)","default":0},
+    {"type":"range","id":"padding_bottom_mobile","min":0,"max":100,"step":1,"unit":"px","label":"Bottom spacing (mobile)","default":0},
+    {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}],
+    "blocks":[
+        {"type":"logo","name":"Logo","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"image_picker","id":"logo","label":"Logo","info":"Recommended: 768x1024px, JPG format"},
+            {"type":"image_picker","id":"logo_mobile","label":"Logo (mobile)","info":"Recommended: 768x1024px, JPG format. Leave empty to use desktop image"},
+            {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+        ,{"type":"mobile_menu","name":"Mobile Menu","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"liquid","id":"button_code","label":"Button Icon","default":"Add Your Button Svg Here","info":"Supports Html and Liquid Codes"},
+            {"type":"liquid","id":"button_close","label":"Close Button Icon","default":"Add Your Button Svg Here","info":"Supports Html and Liquid Codes"},
+            {"type":"link_list","id":"menu","label":"Menu"},
+            {"type":"header","content":"Design"},
+            {"type":"select","id":"font_type_menu","label":"Menu Font","options":[{"value":"heading","label":"Heading Font"},{"value":"body","label":"Body Font"}],"default":"body"},]}
+        ,{"type":"cart","name":"Cart","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"liquid","id":"button_code","label":"Cart Icon","default":"Add Your Cart Icon Svg Here","info":"Supports Html and Liquid Codes"},]}
+        ],"presets":[{"name":"Header","category": "Hitesh Kaushal"}]}
+{% endschema %}

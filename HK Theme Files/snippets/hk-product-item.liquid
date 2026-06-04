@@ -1,0 +1,68 @@
+ {% if  block.settings.product != blank %}
+ {% assign product = block.settings.product %}
+ {% assign price = product.selected_or_first_available_variant.price | money %}
+ <div class="hk-element hk-element-icon-with-text-main {{ block.settings.custom_class }} hk-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<div class="hk-icon-with-text-flex">
+<div class="hk-element-image">
+{%  if block.settings.image != blank %}
+{% if block.settings.image_mobile != blank %}
+  <div class="hk-media hk-hide-mobile">
+ {{ block.settings.image | image_url: width: 800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '375, 550, 750, 800'
+}}   
+</div>
+  <div class="hk-media hk-hide-desktop">
+ {{ block.settings.image_mobile | image_url: width: 800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image_mobile.alt,
+  widths: '375, 550, 750, 800'
+}}   
+</div>
+{% else %}
+  <div class="hk-media">
+ {{ block.settings.image | image_url: width: 800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '375, 550, 750, 800'
+}} 
+</div>
+{%  endif %}
+{%  endif %}
+{%  if block.settings.liquid != blank %}
+<div class="hk-media hk-svg">
+{{ block.settings.liquid }}
+</div>
+{% endif %}
+</div>
+<div class="hk-element-texts">
+{%  if block.settings.title != blank %}
+<div class="hk-element-title hk-font-{{ block.settings.font_type_title }}">{{ block.settings.title }}</div>
+{% endif %}
+{%  if block.settings.text != blank %}
+<div class="hk-element-text hk-font-{{ block.settings.font_type_text }}">{{ block.settings.text | replace:'[price]',price }}</div>
+{% endif %}
+{% if product.available %}
+  <a href="{{ product.url }}" class="hk-card-link"></a>
+<button class="hk-button hk-atc-js" variant_id="{{ product.selected_or_first_available_variant.id }}" quantity="1">Add To Cart <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
+  <g clip-path="url(#clip0_1_2498)">
+    <path d="M12.1323 24.2646C18.8328 24.2646 24.2646 18.8328 24.2646 12.1323C24.2646 5.43181 18.8328 0 12.1323 0C5.43181 0 0 5.43181 0 12.1323C0 18.8328 5.43181 24.2646 12.1323 24.2646Z" fill="white"/>
+    <path d="M10.8883 11.0969V7.58167H12.9475V11.0969H16.2755V12.9897H12.9475V16.5049H10.8883V12.9897H7.58105V11.0969H10.8883Z" fill="#162036"/>
+  </g>
+  <defs>
+    <clipPath id="clip0_1_2498">
+      <rect width="24.2642" height="24.2642" fill="white"/>
+    </clipPath>
+  </defs>
+</svg></button>
+{% else %}
+<button class="hk-button hk-atc-js hk-disabled" variant_id="{{ product.selected_or_first_available_variant.id }}" quantity="1">Coming Soon!</button>
+{% endif %}
+</div>
+</div>
+</div>
+{% endif %}

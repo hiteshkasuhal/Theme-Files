@@ -1,0 +1,44 @@
+<div class="hk-element hk-element-review-card {{ block.settings.custom_class }} hk-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<div class="hk-review-card_main">
+<div class="hk-element-review-card-top">
+{%  if block.settings.rating != blank or block.settings.rating_icon != blank %}
+<div class="hk-element-review-rating">
+<div class="hk-element-review-rating-{{ block.id }} hk-review-card-rating hk-element">
+{{  block.settings.rating_icon }}<span>{{  block.settings.rating }}</span></div>
+</div>
+{% endif %}
+{%  if block.settings.title != blank %}
+<div class="hk-element-title-main">
+<div class="hk-element-title-{{ block.id }} hk-review-card-title hk-element hk-font-body"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13" fill="none">
+  <path d="M6.5 0C5.21442 0 3.95772 0.381218 2.8888 1.09545C1.81988 1.80968 0.986756 2.82484 0.494786 4.01256C0.00281636 5.20028 -0.125905 6.50721 0.124899 7.76809C0.375703 9.02896 0.994768 10.1872 1.90381 11.0962C2.81285 12.0052 3.97104 12.6243 5.23192 12.8751C6.49279 13.1259 7.79973 12.9972 8.98745 12.5052C10.1752 12.0132 11.1903 11.1801 11.9046 10.1112C12.6188 9.04229 13 7.78558 13 6.5C13 4.77609 12.3152 3.12279 11.0962 1.90381C9.87721 0.684819 8.22391 0 6.5 0ZM10.2538 4.44167L6.54334 9.47375C6.50016 9.53259 6.44554 9.5821 6.38276 9.6193C6.31997 9.6565 6.25032 9.68063 6.17797 9.69025C6.10563 9.69986 6.03209 9.69475 5.96177 9.67523C5.89145 9.65572 5.82579 9.62219 5.76875 9.57667L3.12 7.45875C3.06436 7.41405 3.0181 7.35879 2.98388 7.29616C2.94966 7.23352 2.92816 7.16474 2.92061 7.09377C2.91306 7.02279 2.91961 6.95103 2.93988 6.88259C2.96016 6.81416 2.99376 6.75041 3.03875 6.695C3.12876 6.58578 3.25794 6.51612 3.39865 6.50094C3.53937 6.48575 3.68043 6.52625 3.79167 6.61375L6.00167 8.37958L9.38167 3.79167C9.46696 3.67745 9.59382 3.60146 9.73477 3.58017C9.87571 3.55887 10.0194 3.594 10.1346 3.67792C10.1931 3.71982 10.2427 3.77296 10.2804 3.83423C10.3181 3.89551 10.3433 3.96369 10.3544 4.03479C10.3655 4.1059 10.3623 4.1785 10.345 4.24836C10.3277 4.31822 10.2967 4.38393 10.2538 4.44167Z" fill="#418E31"/>
+</svg> {{  block.settings.title }}</div>
+</div>
+{% endif %}
+{%  if block.settings.text != blank %}
+<div class="hk-element-text-main">
+<div class="hk-element-text-{{ block.id }} hk-review-card-text hk-element hk-font-body">{{  block.settings.text }}</div>
+</div>
+{% endif %}
+</div>
+<div class="hk-element-review-card-bottom">
+{%  if block.settings.name != blank %}
+<div class="hk-element-review-user-detail">
+<div class="hk-element-review-name">
+{%  if block.settings.user != blank %}
+<div class="hk-media hk-user">
+ {{ block.settings.user | image_url: width: 800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.user.alt,
+  widths: '375, 550, 750, 800'
+}} 
+</div>
+{% endif %}
+{{  block.settings.name }}<span>{{  block.settings.verified_badge }} Verified Customer</span>
+</div>
+</div>
+
+{% endif %}
+</div>
+</div>
+</div>

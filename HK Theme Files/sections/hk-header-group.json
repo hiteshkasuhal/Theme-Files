@@ -1,0 +1,105 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "Header Group Global",
+  "type": "header",
+  "sections": {
+    "hk_richtext_RKNM4G": {
+      "type": "hk-richtext",
+      "blocks": {
+        "richtext_EeVhiH": {
+          "type": "richtext",
+          "settings": {
+            "text": "<p>Save 26% When You Subscribe + <strong>FREE Gifts!</strong></p>",
+            "font_type": "body",
+            "custom_id": "",
+            "custom_class": "hk-header-top-text1"
+          }
+        }
+      },
+      "block_order": [
+        "richtext_EeVhiH"
+      ],
+      "name": "RichText",
+      "settings": {
+        "background_color": "#5d87df",
+        "text_color": "#ffffff",
+        "text_alignment": "center",
+        "padding_top": 10,
+        "padding_bottom": 10,
+        "text_alignment_mobile": "center",
+        "padding_top_mobile": 7,
+        "padding_bottom_mobile": 7,
+        "custom_id": "",
+        "custom_class": "hk-header-top"
+      }
+    },
+    "hk_page_settings_TQFqVC": {
+      "type": "hk-page-settings",
+      "name": "Page Settings",
+      "settings": {
+        "heading_font": "Bebas Neue",
+        "body_font": "Aeonik",
+        "container_width": 1508
+      }
+    },
+    "hk_header_anjb4d": {
+      "type": "hk-header",
+      "blocks": {
+        "mobile_menu_yHDQ3b": {
+          "type": "mobile_menu",
+          "settings": {
+            "button_code": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\">\n  <g clip-path=\"url(#clip0_1_3224)\">\n    <path d=\"M22.4875 12.657H0.977716C0.438015 12.657 0 12.2202 0 11.682C0 11.1438 0.438015 10.707 0.977716 10.707H22.4875C23.0272 10.707 23.4652 11.1438 23.4652 11.682C23.4652 12.2202 23.0272 12.657 22.4875 12.657Z\" fill=\"black\"/>\n    <path d=\"M22.4875 5.18047H0.977716C0.438015 5.18047 0 4.74367 0 4.20547C0 3.66727 0.438015 3.23047 0.977716 3.23047H22.4875C23.0272 3.23047 23.4652 3.66727 23.4652 4.20547C23.4652 4.74367 23.0272 5.18047 22.4875 5.18047Z\" fill=\"black\"/>\n    <path d=\"M22.4875 20.1297H0.977716C0.438015 20.1297 0 19.6929 0 19.1547C0 18.6165 0.438015 18.1797 0.977716 18.1797H22.4875C23.0272 18.1797 23.4652 18.6165 23.4652 19.1547C23.4652 19.6929 23.0272 20.1297 22.4875 20.1297Z\" fill=\"black\"/>\n  </g>\n  <defs>\n    <clipPath id=\"clip0_1_3224\">\n      <rect width=\"23.4652\" height=\"23.4\" fill=\"white\"/>\n    </clipPath>\n  </defs>\n</svg>",
+            "button_close": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"11\" viewBox=\"0 0 12 11\" fill=\"none\">\n  <path d=\"M10.3613 0.936005L0.936329 10.036\" stroke=\"#222222\" stroke-width=\"1.872\" stroke-linecap=\"round\"/>\n  <path d=\"M0.935547 0.936005L10.3605 10.036\" stroke=\"#222222\" stroke-width=\"1.872\" stroke-linecap=\"round\"/>\n</svg>",
+            "menu": "main-menu",
+            "font_type_menu": "body"
+          }
+        },
+        "logo_xQ3ehC": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/HP-header-logo.webp",
+            "custom_id": "",
+            "custom_class": "hk-header-logo"
+          }
+        },
+        "cart_aUjxwg": {
+          "type": "cart",
+          "settings": {
+            "button_code": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"21\" height=\"24\" viewBox=\"0 0 21 24\" fill=\"none\">\n  <path d=\"M10.2681 1.46687C11.2407 1.46687 12.1735 1.85324 12.8612 2.54097C13.549 3.2287 13.9353 4.16146 13.9353 5.13406V5.8675H6.60094V5.13406C6.60094 4.16146 6.9873 3.2287 7.67503 2.54097C8.36276 1.85324 9.29553 1.46687 10.2681 1.46687ZM15.4022 5.8675V5.13406C15.4022 3.77242 14.8613 2.46656 13.8985 1.50373C12.9356 0.540909 11.6298 0 10.2681 0C8.90649 0 7.60062 0.540909 6.6378 1.50373C5.67497 2.46656 5.13406 3.77242 5.13406 5.13406V5.8675H0V20.5362C0 21.3143 0.309091 22.0605 0.859276 22.6107C1.40946 23.1609 2.15567 23.47 2.93375 23.47H17.6025C18.3806 23.47 19.1268 23.1609 19.677 22.6107C20.2272 22.0605 20.5363 21.3143 20.5363 20.5362V5.8675H15.4022ZM1.46688 7.33437H19.0694V20.5362C19.0694 20.9253 18.9148 21.2984 18.6397 21.5735C18.3646 21.8486 17.9915 22.0031 17.6025 22.0031H2.93375C2.54471 22.0031 2.17161 21.8486 1.89651 21.5735C1.62142 21.2984 1.46688 20.9253 1.46688 20.5362V7.33437Z\" fill=\"black\"/>\n</svg>"
+          }
+        }
+      },
+      "block_order": [
+        "mobile_menu_yHDQ3b",
+        "logo_xQ3ehC",
+        "cart_aUjxwg"
+      ],
+      "name": "Header",
+      "settings": {
+        "background_color": "#ffffff",
+        "text_color": "#162036",
+        "text_alignment": "center",
+        "padding_top": 25,
+        "padding_bottom": 25,
+        "text_alignment_mobile": "center",
+        "padding_top_mobile": 13,
+        "padding_bottom_mobile": 13,
+        "custom_id": "",
+        "custom_class": ""
+      }
+    }
+  },
+  "order": [
+    "hk_richtext_RKNM4G",
+    "hk_page_settings_TQFqVC",
+    "hk_header_anjb4d"
+  ]
+}

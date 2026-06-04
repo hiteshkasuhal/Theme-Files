@@ -1,0 +1,53 @@
+{% capture slider_config %}
+{
+  "dots": false,
+  "arrows": false,
+  "speed": 400,
+  "slidesToShow": 1,
+  "slidesToScroll": 1,
+  "autoplay": false,
+  "infinite": true,
+  "cssEase": "linear",
+  "responsive": [ 
+    {
+      "breakpoint": 9999,
+      "settings": "unslick"
+    },
+    {
+      "breakpoint": 915,
+      "settings": {
+        "slidesToShow": 1,
+        "slidesToScroll": 1,
+        "infinite": true
+      }
+    }
+  ]
+}
+{% endcapture %}
+<div class="hk-element hk-element-related-main {{ block.settings.custom_class }} hk-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<div class="hk-element-related-grid hk-slick-slider" data-slider-config='{{ slider_config | strip }}'>
+{% assign shown_count = 0 %}
+
+{% for product in block.settings.collection.products %}
+  {% assign in_cart = false %}
+  {% for item in cart.items %}
+    {% if item.product_id == product.id %}
+      {% assign in_cart = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+  {% unless in_cart %}
+    {% if shown_count < 3 %}
+      <div class="hk-related-grid-item">
+        {% render 'hk-element-product-related-card', product: product %} 
+      </div>
+
+      {% assign shown_count = shown_count | plus: 1 %}
+    {% endif %}
+  {% endunless %}
+  {% if shown_count == 3 %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+</div>
+</div>

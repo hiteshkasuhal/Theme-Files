@@ -1,0 +1,152 @@
+<div class="hk-element hk-element-options {{ block.settings.custom_class }} hk-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+{%  assign single_product = section.settings.collection.products[0] %}
+{%  assign single_product = product %}
+{% for i in (1..3) %}   
+<div class="hk-element-option-item">
+<button class="hk-element-option{% if forloop.first %} active{% endif %} hk-font-body" data_tab="{{ i }}">
+
+{% assign total_quantity = i %}
+{% assign title = 'Buy 1' %}
+{%  if forloop.index == 2 %}
+{% assign total_quantity = 3 %}
+<span class="hk-badge">Most Popular</span>
+{% assign title = 'Buy 2, Get 1 FREE' %}
+{% endif %}
+{%  if forloop.index == 3 %}
+{% assign total_quantity = 5 %}
+<span class="hk-badge hk-best-value-badge">Best Value</span>
+{% assign title = 'Buy 3, Get 2 FREE' %}
+{% endif %}
+{%  assign price = single_product.price | times:i  %}
+{%  assign price_sub = single_product.selected_or_first_available_variant.selling_plan_allocations.first.per_delivery_price | times:i  %}
+{%  assign compare_price = single_product.compare_at_price | times:total_quantity  %}
+{%  assign save_percentage = compare_price | minus:price| times:100 | divided_by:compare_price |round  %}
+{%  assign save_percentage_sub = compare_price | minus:price_sub| times:100 | divided_by:compare_price |round  %}
+<span class="hk-element-option-top">
+<span class="hk-element-option-top-left">
+<span class="hk-element-option-selector"></span>
+<span class="hk-element-option-title-flex">
+<span class="hk-element-option-title">{{ title }}</span>
+<span class="hk-element-option-save-percentage">
+<span class="hk-sub-tab" sub_tab="1" style="display:none;">{{save_percentage}}</span><span class="hk-sub-tab" sub_tab="2">{{save_percentage_sub}}</span>% OFF</span>
+</span>
+</span>
+<span class="hk-element-option-top-right">
+<span class="hk-element-option-price">
+<span class="hk-element-option-price-regular">
+<span class="hk-sub-tab" sub_tab="1" style="display:none;">{{ price | money}}</span>
+<span class="hk-sub-tab" sub_tab="2">{{ price_sub | money}}</span>
+</span>
+<span class="hk-element-option-price-compare">{{ compare_price | money}}</span>
+</span>
+</span>
+</span>
+
+<span class="hk-element-option-bottom">
+<span class="hk-element-option-options">
+{% for i in (1..total_quantity) %}
+<span class="hk-element-option-option-item{% if i > 3 or i == total_quantity and total_quantity != 1 %} hk-free_item{% endif %}">
+<span class="hk-element-option-option-item-left">{% if i > 3 or i == total_quantity and total_quantity != 1 %}<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+  <path d="M26.9859 6.93427H23.4586C24.004 6.20941 24.3277 5.30882 24.3277 4.33392C24.3277 1.9442 22.3835 0 19.9938 0C18.5543 0 17.4928 0.515736 16.6533 1.62302C15.9509 2.54944 15.4373 3.84291 14.7931 5.4772C14.1489 3.84286 13.6353 2.54944 12.9329 1.62302C12.0934 0.515736 11.0319 0 9.5924 0C7.20268 0 5.25849 1.9442 5.25849 4.33392C5.25849 5.30882 5.58226 6.20941 6.12764 6.93427H2.60035C1.16652 6.93427 0 8.10078 0 9.53462V11.2682C0 12.3982 0.724689 13.3616 1.73357 13.7194V26.9859C1.73357 28.4197 2.90008 29.5862 4.33392 29.5862H25.2523C26.6861 29.5862 27.8526 28.4197 27.8526 26.9859V13.7194C28.8615 13.3616 29.5862 12.3982 29.5862 11.2682V9.53462C29.5862 8.10078 28.4197 6.93427 26.9859 6.93427ZM16.3842 6.16803C17.712 2.79925 18.2168 1.73357 19.9938 1.73357C21.4276 1.73357 22.5942 2.90008 22.5942 4.33392C22.5942 5.76775 21.4276 6.93427 19.9938 6.93427H16.081C16.1872 6.66759 16.2885 6.41085 16.3842 6.16803ZM9.5924 1.73357C11.3694 1.73357 11.8742 2.79925 13.202 6.16803C13.2977 6.41085 13.399 6.66759 13.5052 6.93427H9.5924C8.15857 6.93427 6.99205 5.76775 6.99205 4.33392C6.99205 2.90008 8.15857 1.73357 9.5924 1.73357ZM11.326 27.8526H4.33392C3.85597 27.8526 3.46713 27.4638 3.46713 26.9859V13.8685H11.326V27.8526ZM11.326 12.135H2.60035C2.12241 12.135 1.73357 11.7461 1.73357 11.2682V9.53462C1.73357 9.05667 2.12241 8.66783 2.60035 8.66783H11.326V12.135ZM16.5267 27.8526H13.0595V8.66783H16.5267V27.8526ZM26.1191 26.9859C26.1191 27.4638 25.7302 27.8526 25.2523 27.8526H18.2602V13.8685H26.1191V26.9859ZM27.8526 11.2682C27.8526 11.7461 27.4638 12.135 26.9859 12.135H18.2602V8.66783H26.9859C27.4638 8.66783 27.8526 9.05667 27.8526 9.53462V11.2682Z" fill="white"/>
+</svg>{% else %}#{{  i }}{% endif %}</span>
+<span class="hk-element-option-option-item-right">
+{% for option_product in section.settings.collection.products %}
+{%  if option_product.available and option_product.id == single_product.id %}
+<span class="hk-product-option{% if i > 3 or i == total_quantity and total_quantity != 1 %} hk-free-item{% endif %}" variant_id="{{ option_product.selected_or_first_available_variant.id }}" selling_plan="{{ option_product.selected_or_first_available_variant.selling_plan_allocations.first.selling_plan.id }}">
+<span class="hk-product-option-title{% if i > 3 or i == total_quantity and total_quantity != 1 %} hk-free_item-title{% endif %}"><span>{{ option_product.title }}</span>
+{% if i > 3 or i == total_quantity and total_quantity != 1 %} 
+<span class="hk-free-item-badge"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+  <path d="M4.7387 11.4371L0.24882 6.96742C0.165954 6.87977 0.1038 6.78118 0.0623519 6.67163C0.0209052 6.56208 0.000195221 6.45253 0.000195226 6.34298C0.000195231 6.23343 0.0221326 6.1251 0.0660074 6.01798C0.109882 5.91085 0.17081 5.81348 0.24882 5.72584L5.7332 0.262921C5.81121 0.185018 5.90364 0.121724 6.01049 0.0730335C6.11725 0.0243434 6.22957 -2.39129e-07 6.34745 -2.33976e-07L10.8227 -3.83567e-08C11.064 -2.78086e-08 11.2706 0.0858379 11.4425 0.257517C11.6143 0.429096 11.7002 0.635393 11.7002 0.876404L11.7002 5.36067C11.7002 5.4782 11.6765 5.5921 11.629 5.70233C11.5814 5.81246 11.5174 5.90793 11.4369 5.98876L5.98182 11.4371C5.89407 11.5285 5.79535 11.5952 5.68566 11.6372C5.57598 11.6791 5.46629 11.7 5.3566 11.7C5.24691 11.7 5.136 11.6781 5.02388 11.6343C4.91177 11.5904 4.81671 11.5247 4.7387 11.4371ZM8.5412 2.41011C8.5412 2.61461 8.61675 2.79231 8.76788 2.94326C8.91902 3.0942 9.09695 3.16966 9.3017 3.16966C9.50645 3.16966 9.68437 3.0942 9.83551 2.94326C9.98663 2.79231 10.0622 2.61461 10.0622 2.41011C10.0622 2.20562 9.98663 2.02791 9.83551 1.87697C9.68437 1.72603 9.50645 1.65056 9.3017 1.65056C9.09695 1.65056 8.91902 1.72603 8.76788 1.87697C8.61675 2.02791 8.5412 2.20562 8.5412 2.41011Z" fill="white" fill-opacity="0.66"/>
+</svg> free</span>
+{% endif %}
+</span>
+<span class="hk-product-option-inspired"><strong>Inspired by: </strong>{{ option_product.metafields.custom.scent }}</span>
+<svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none">
+  <path d="M17.5931 8.49332L11.0931 14.9933C11.0025 15.0842 10.8949 15.1563 10.7764 15.2056C10.6579 15.2548 10.5308 15.2801 10.4025 15.2801C10.2741 15.2801 10.1471 15.2548 10.0286 15.2056C9.91006 15.1563 9.80243 15.0842 9.71185 14.9933L3.21185 8.49332C3.02868 8.31016 2.92578 8.06173 2.92578 7.8027C2.92578 7.54366 3.02868 7.29524 3.21185 7.11207C3.39501 6.92891 3.64344 6.82601 3.90247 6.82601C4.16151 6.82601 4.40993 6.92891 4.5931 7.11207L10.4033 12.9223L16.2135 7.11126C16.3966 6.9281 16.6451 6.8252 16.9041 6.8252C17.1631 6.8252 17.4116 6.9281 17.5947 7.11126C17.7779 7.29443 17.8808 7.54285 17.8808 7.80189C17.8808 8.06092 17.7779 8.30935 17.5947 8.49251L17.5931 8.49332Z" fill="#1C1C1C"/>
+</svg>
+</span>
+{% break %}
+{% endif %}
+{% endfor %}
+</span>
+
+
+<span class="hk-product-option-list-main">
+<span class="hk-product-option-list">
+{% for option_product in section.settings.collection.products %}
+{% if option_product.available %}
+<span class="hk-product-option-list-item" variant_id="{{ option_product.selected_or_first_available_variant.id }}" selling_plan="{{ option_product.selected_or_first_available_variant.selling_plan_allocations.first.selling_plan.id }}">
+<span class="hk-product-option-list-flex">
+<span class="hk-product-option-list-flex-left">
+<span class="hk-product-option-list-left-image">
+{% if option_product.metafields.custom.scent_image != blank %}
+{{ option_product.metafields.custom.scent_image.value | image_url: width: 200 | image_tag:
+  loading: lazy,
+  fetchpriority: low,
+  alt:option_product.featured_image.alt,
+  widths: '375, 550, 750, 800'
+}}   
+{% else %}
+{{ option_product.featured_image | image_url: width: 200 | image_tag:
+  loading: lazy,
+  fetchpriority: low,
+  alt:option_product.featured_image.alt,
+  widths: '375, 550, 750, 800'
+}}   
+{% endif %}
+</span>
+<span class="hk-product-option-list-left-details">
+<span class="hk-product-option-list-title">{{ option_product.title }}</span>
+<span class="hk-product-option-list-inspired"><strong>Inspired by: </strong>{{ option_product.metafields.custom.scent }}</span>
+</span>
+</span>
+<span class="hk-product-option-list-flex-right">
+{% if option_product.metafields.custom.best_seller == true %}
+<span class="hk-product-option-list-badge hk-best-seller-badge">best seller</span>
+{% endif %}
+{% if option_product.metafields.custom.new_scent == true %}
+<span class="hk-product-option-list-badge hk-new-scent-badge">new scent</span>
+{% endif %}
+</span>
+</span>
+</span>
+{% endif %}
+{% endfor %}
+</span>
+</span>
+
+
+
+
+</span>
+{% endfor %}
+</span>
+</span>
+
+</button>
+
+</div>
+{% endfor %}
+
+</div>
+
+
+
+<div class="hk-subscription-toggle-main">
+<button class="hk-sub-toggle active hk-font-body">
+<span class="hk-sub-flex">
+<span class="hk-sub-selector-main">
+<span class="hk-sub-selector">
+</span><svg xmlns="http://www.w3.org/2000/svg" width="37" height="37" viewBox="0 0 37 37" fill="none">
+  <path d="M32.3556 0H4.04444C1.81393 0 0 1.81393 0 4.04444V32.3556C0 34.5861 1.81393 36.4 4.04444 36.4H32.3556C34.5861 36.4 36.4 34.5861 36.4 32.3556V4.04444C36.4 1.81393 34.5861 0 32.3556 0ZM16.3133 27.2616L8.6814 19.6297L11.5408 16.7703L16.0423 21.2718L24.7358 10.8391L27.844 13.4276L16.3133 27.2616Z" fill="#CAAD58"/>
+</svg>
+</span>
+<span class="hk-sub-details">
+<span class="hk-sub-title">Save 20% with Automatic Refills</span>
+<span class="hk-sub-text"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19" fill="none">
+  <path d="M4.54987 10.6165L7.5832 12.8915L14.4082 4.5498" stroke="#1C1C1C" stroke-width="1.3"/>
+</svg> No commitments, cancel anytime</span>
+</span>
+</span>
+</button>
+</div>

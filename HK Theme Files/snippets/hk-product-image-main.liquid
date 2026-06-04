@@ -1,0 +1,12 @@
+{%  if block.settings.image != blank %}
+<div class="hk-element-image-{{ block.id }} hk-media hk-product-media-main-item">
+  <div class="hk-media">
+ {{ block.settings.image | image_url: width: 800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '375, 550, 750, 800'
+}} 
+</div>
+</div>
+{% endif %}

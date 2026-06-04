@@ -1,0 +1,95 @@
+<div class="hk-line-item{% if item.selling_plan_allocation %}{% else %} hk-without-sub{% endif %}" data-key="{{ item.key }}" variant_id="{{ item.variant.id }}" selling_plan="{{ item.variant.selling_plan_allocations.first.selling_plan.id }}"
+quantity="{{ item.quantity }}">
+<div class="hk-line-item-flex">
+<div class="hk-line-item-left">
+<div class="hk-line-item-image">
+{% assign feature_image = item.product.featured_image %}
+{% if item.variant.featured_image != blank %}
+{% assign feature_image = item.variant.featured_image %}
+{% endif %}
+ {{ feature_image | image_url: width: 200 | image_tag:
+  loading: 'lazy',
+  fetchpriority: 'low',
+  alt: feature_image.alt,
+  widths: '375, 550, 750, 800'
+}} 
+</div>
+<div class="hk-line-item-details">
+<div class="hk-item-title"><a href="{{ item.product.url }}">{{ item.product.title }}</a>
+</div>
+{% if item.product.metafields.custom.cart_subtitle != blank %}
+<div class="hk-item-subtitle">{{ item.product.metafields.custom.cart_subtitle.value }}</div>
+{% endif %}
+<!-- Variant Options (Size, Color, etc.) -->
+{% unless item.product.has_only_default_variant %}
+  <div class="hk-item-properties">
+    {% for option in item.options_with_values %}
+      <div class="hk-item-property">
+       {{ option.name }}: {{ option.value }}
+      </div>
+    {% endfor %}
+  </div>
+{% endunless %}
+<!-- Subscription -->
+  {% if item.selling_plan_allocation %}
+    <div class="hk-item-properties hk-item-subscription-cart">
+  Subscription: {{ item.selling_plan_allocation.selling_plan.name }}
+    </div>
+  {% endif %}
+
+ {% if item.properties != blank %}
+    <div class="hk-item-properties">
+      {% for p in item.properties %}
+        {% assign key = p.first %}
+        {% assign value = p.last %}
+
+        {% unless value == blank or key contains '_' %}
+          <div class="hk-item-property">
+          {{ key }}: {{ value }}
+          </div>
+        {% endunless %}
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% assign line_price = item.final_line_price %}
+  {% assign line_compare_price = item.final_line_price %}
+  {% if item.variant.compare_at_price > item.variant.price %}
+  {% assign line_compare_price = item.variant.compare_at_price | times:item.quantity %}
+  {% else %}
+  {% assign line_compare_price = item.variant.price | times:item.quantity %}
+    {% endif %}
+  {% if item.final_line_price > line_compare_price %}
+  {% assign line_compare_price = item.original_line_price %}
+    {% endif %}
+<div class="hk-item-price">
+  {{ line_price | money }}
+  {% if line_compare_price > line_price %}<s> {{ line_compare_price | money }} </s> 
+<span class="hk-cart-save-badge">SAVE {{  line_compare_price | minus: line_price | money}}</span>
+{% endif %}
+</div>
+<div class="hk-quantity-main-flex">
+<div class="hk-quantity-main">
+<button class="hk-quantity-button hk-quantity-minus">
+<svg xmlns="http://www.w3.org/2000/svg" width="8" height="1" viewBox="0 0 8 1" fill="none">
+  <path d="M0 0.8866V0H7.60445V0.8866H0Z" fill="#161616"/>
+</svg>
+</button>
+<input class="hk-quantity-input" name="hk-item-quantity" value="{{ item.quantity }}" readonly>
+<button class="hk-quantity-button hk-quantity-plus">
+<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
+  <path d="M0 3.1317H3.1317V0H4.0183V3.1317H7.15V4.0183H4.0183V7.1643H3.1317V4.0183H0V3.1317Z" fill="#161616"/>
+</svg>
+</button>
+</div>
+
+<div class="hk-element hk-element-stock-main hk-product-stock hk-global-stock hk-element-stock_GQWYj7">
+<div class="hk-element-stock hk-font-body">
+    <span class="stock_outer"><span class="stock_inner"></span></span>
+    <p>In stock</p></div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</div>

@@ -1,0 +1,22 @@
+ <div class="hk-element hk-element-scroll-item-main {{ block.settings.custom_class }} hk-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<div class="hk-scroll-item-flex">
+{%  if block.settings.image != blank %}
+<div class="hk-media">
+ {{ block.settings.image | image_url: width: 800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '375, 550, 750, 800'
+}} 
+</div>
+{%  endif %}
+{%  if block.settings.liquid != blank %}
+<div class="hk-media hk-svg">
+{{ block.settings.liquid }}
+</div>
+{% endif %}
+{%  if block.settings.text != blank %}
+<div class="hk-element-text hk-font-{{ block.settings.font_type }}">{{ block.settings.text }}</div>
+{% endif %}
+</div>
+</div>

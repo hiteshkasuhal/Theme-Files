@@ -1,0 +1,17 @@
+<div class="hk-element hk-element-icon-with-text-grid-main {{ block.settings.custom_class }} hk-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<div class="hk-element-icon-with-text-grid">
+    {% assign side = block.settings.position %}
+ {%- for block in section.blocks -%} 
+            {%- case block.type -%}  
+                {%- when 'icon_with_text_item' -%} 
+                    {% if side != blank %}
+            {% if block.settings.position == side %}
+                    {%  render 'hk-element-icon-with-text', block:block %} 
+            {%  endif %}
+                    {%  else %}
+                    {%  render 'hk-element-icon-with-text', block:block %} 
+                    {%  endif %}
+            {%  endcase %}
+        {%  endfor %} 
+</div>
+</div>

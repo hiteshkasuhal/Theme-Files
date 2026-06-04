@@ -1,0 +1,21 @@
+ <div class="hk-element hk-element-stock-main {{ block.settings.custom_class }} hk-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+{% assign now = 'now' | date: '%s' %}
+{% assign add_days = block.settings.date | times: 24 | times: 60 | times: 60 %}
+{% assign future_timestamp = now | plus: add_days %}
+{% assign future_day = future_timestamp | date: '%-d' %}
+{% assign future_month = future_timestamp | date: '%B' %}
+{% case future_day %}
+{% when '1' or '21' or '31' %}
+{% assign suffix = 'st' %}
+{% when '2' or '22' %}
+{% assign suffix = 'nd' %}
+{% when '3' or '23' %}
+{% assign suffix = 'rd' %}
+{% else %}
+{% assign suffix = 'th' %}
+{% endcase %}
+{% assign date = '<span class="hk-future-date">'| append:future_month | append:' ' | append:future_day | append:suffix | append:'</span>' %}
+<div class="hk-element-stock hk-font-{{ block.settings.font_type }}">
+    <span class="stock_outer"><span class="stock_inner"></span></span>
+    {{ block.settings.text | replace:'[date]',date }}</div>
+</div>

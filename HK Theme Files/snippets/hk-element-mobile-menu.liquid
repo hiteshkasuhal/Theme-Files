@@ -1,0 +1,11 @@
+{%  if block.settings.menu != blank %}
+<div class="hk-drawer-bg hk-drawer-menu-bg" style="display:none;"></div>
+<div class="hk-element-drawer hk-drawer-menu">
+<div class="hk-drawer-menu-inner">
+<button class="hk-mobile-menu-close">{{ block.settings.button_close }}</button>
+<div class="hk-drawer-menu-content">
+{%  render 'hk-element-menu', block:block %} 
+</div>
+</div>
+</div>
+{% endif %}

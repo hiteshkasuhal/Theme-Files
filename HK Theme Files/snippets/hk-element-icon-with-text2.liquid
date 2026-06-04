@@ -1,0 +1,48 @@
+ <div class="hk-element hk-element-icon-with-text-main {{ block.settings.custom_class }} hk-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<div class="hk-icon-with-text-flex">
+<div class="hk-element-image">
+{%  if block.settings.image != blank %}
+{% if block.settings.image_mobile != blank %}
+  <div class="hk-media hk-hide-mobile">
+ {{ block.settings.image | image_url: width: 800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '375, 550, 750, 800'
+}}   
+</div>
+  <div class="hk-media hk-hide-desktop">
+ {{ block.settings.image_mobile | image_url: width: 800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image_mobile.alt,
+  widths: '375, 550, 750, 800'
+}}   
+</div>
+{% else %}
+  <div class="hk-media">
+ {{ block.settings.image | image_url: width: 800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '375, 550, 750, 800'
+}} 
+</div>
+{%  endif %}
+{%  endif %}
+{%  if block.settings.liquid != blank %}
+<div class="hk-media hk-svg">
+{{ block.settings.liquid }}
+</div>
+{% endif %}
+</div>
+<div class="hk-element-texts">
+{%  if block.settings.title != blank %}
+<div class="hk-element-title hk-font-{{ block.settings.font_type_title }}">{{ block.settings.title }}</div>
+{% endif %}
+{%  if block.settings.text != blank %}
+<div class="hk-element-text hk-font-{{ block.settings.font_type_text }}">{{ block.settings.text }}</div>
+{% endif %}
+</div>
+</div>
+</div>

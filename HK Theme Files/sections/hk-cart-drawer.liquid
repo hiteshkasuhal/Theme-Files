@@ -1,0 +1,248 @@
+{% if template contains 'cart' %}
+{% else %}
+    <div class="hk-drawer-cart-bg"></div>
+<div class="hk-cart-drawer hk-cart-drawer-js {{ section.settings.custom_class }}" {% if section.settings.custom_id != blank %} id="{{ section.settings.custom_id }}" {% endif %}>
+  <button class="hk-mobile-cart-close"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="11" viewBox="0 0 12 11" fill="none">
+  <path d="M10.3613 0.936005L0.936329 10.036" stroke="black" stroke-width="1.872" stroke-linecap="round"/>
+  <path d="M0.935547 0.936005L10.3605 10.036" stroke="black" stroke-width="1.872" stroke-linecap="round"/>
+</svg></button>
+    {% if cart.item_count > 0 %}
+    <div class="hk-cart-drawer-content hk-text-left-desktop hk-text-left-mobile"> 
+    <div class="hk-cart-drawer-flex">
+    <div class="hk-cart-drawer-column hk-cart-drawer-column1">
+        {%- for block in section.blocks -%} 
+            {% if block.settings.position == 'left' %}
+            {%- case block.type -%} 
+                {%- when 'heading' -%} 
+                    {%  render 'hk-element-heading', block:block %} 
+                {%- when 'richtext' -%} 
+                    {%  render 'hk-element-richtext', block:block %}  
+                {%- when 'total' -%} 
+                    {%  render 'hk-element-total', block:block %} 
+                {%- when 'image' -%} 
+                    {%  render 'hk-element-image', block:block %} 
+                {%- when 'button' -%} 
+                    {%  render 'hk-element-button', block:block %} 
+                {%- when 'icon_with_text' -%} 
+                    {%  render 'hk-element-icon-with-text', block:block %} 
+                {%- when 'liquid' -%} 
+                    {%  render 'hk-element-liquid', block:block %} 
+                {%- when 'icon_with_text_grid' -%} 
+                    {%  render 'hk-element-icon-with-text-grid', block:block %} 
+                {%- when 'checkout_button' -%} 
+                    {%  render 'hk-element-cart-checkout-button', block:block %} 
+                {%- when 'free_shipping' -%} 
+                    {%  render 'hk-element-free-shipping', block:block %} 
+                {%- when 'related_products' -%} 
+                    {%  render 'hk-element-related-products-cart', block:block %} 
+                {%- when 'cart_items' -%} 
+                    {%  render 'hk-element-cart-items', block:block %} 
+                {%- when 'shipping_protection' -%} 
+                    {%  render 'hk-element-shipping-protection', block:block %} 
+            {%  endcase %}
+            {% endif %}
+        {%  endfor %}  
+    </div>
+    <div class="hk-cart-drawer-column hk-cart-drawer-column2">
+        {%- for block in section.blocks -%} 
+            {% if block.settings.position == 'right' %}
+            {%- case block.type -%} 
+                {%- when 'heading' -%} 
+                    {%  render 'hk-element-heading', block:block %} 
+                {%- when 'richtext' -%} 
+                    {%  render 'hk-element-richtext', block:block %} 
+                {%- when 'total' -%} 
+                    {%  render 'hk-element-total', block:block %} 
+                {%- when 'image' -%} 
+                    {%  render 'hk-element-image', block:block %} 
+                {%- when 'button' -%} 
+                    {%  render 'hk-element-button', block:block %} 
+                {%- when 'icon_with_text' -%} 
+                    {%  render 'hk-element-icon-with-text', block:block %} 
+                {%- when 'liquid' -%} 
+                    {%  render 'hk-element-liquid', block:block %} 
+                {%- when 'icon_with_text_grid' -%} 
+                    {%  render 'hk-element-icon-with-text-grid', block:block %} 
+                {%- when 'checkout_button' -%} 
+                    {%  render 'hk-element-cart-checkout-button', block:block %} 
+                {%- when 'free_shipping' -%} 
+                    {%  render 'hk-element-free-shipping', block:block %} 
+                {%- when 'related_products' -%} 
+                    {%  render 'hk-element-related-products-cart', block:block %} 
+                {%- when 'cart_items' -%} 
+                    {%  render 'hk-element-cart-items', block:block %} 
+                {%- when 'shipping_protection' -%} 
+                    {%  render 'hk-element-shipping-protection', block:block %} 
+            {%  endcase %}
+            {% endif %}
+        {%  endfor %}  
+    </div>
+    </div>
+    </div>
+{% else  %}
+    
+<div class="hk-cart-drawer-content hk-text-center-desktop hk-text-center-mobile empty-cart-main"> 
+     
+ <div class="hk-element hk-element-heading-main hk-empty-cart-title hk-global-heading">
+<h1 class="hk-element-heading hk-font-heading">Your Cart Is Empty</h1>
+ <div class="hk-element hk-element-button-main hk-empty-cart-button">
+<div class="hk-element-button">
+<a class="hk-button hk-font-body" href="#close_cart">Continue Shopping</a></div>
+</div>
+</div>
+
+
+</div>
+{% endif %}
+
+
+  </div>
+{% endif %}
+{% schema %}
+{"name":"Cart Drawer","tag":"section","class":"cart-drawer","settings":[
+    {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}],
+    "blocks":[
+        {"type":"heading","name":"Heading","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"inline_richtext","id":"text","label":"Text","default":"Add Your Heading","info":"Supports bold, italic, and links"},
+            {"type":"header","content":"Design"},
+            {"type":"checkbox","id":"h1","label":"Use H1","info":"Checked only for 1 Heading at the top of the page"},
+            {"type":"select","id":"font_type","label":"Font","options":[{"value":"heading","label":"Heading Font"},{"value":"body","label":"Body Font"}],"default":"heading"},
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Top"},{"value":"right","label":"Bottom"}],"default":"left"},
+            {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+         ,{"type":"richtext","name":"RichText","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"richtext","id":"text","label":"Text","default":"<p>Add Your Description</p>","info":"Supports bold, italic,list,paragraph and links"},
+            {"type":"header","content":"Design"},
+            {"type":"select","id":"font_type","label":"Font","options":[{"value":"heading","label":"Heading Font"},{"value":"body","label":"Body Font"}],"default":"body"},
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Top"},{"value":"right","label":"Bottom"}],"default":"left"},
+            {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+         ,{"type":"free_shipping","name":"Free Shipping","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"richtext","id":"locked_text","label":"Locked Text","default":"<p>Spend [price] more and get FREE shipping</p>","info":"Supports bold, italic,list,paragraph and links"},
+            {"type":"richtext","id":"ulocked_text","label":"Unlocked Text","default":"<p>Congratulations! You get FREE shipping</p>","info":"Supports bold, italic,list,paragraph and links"},
+            {"type":"number","id":"threshold","label":"Threshold","default":100,"info":"Price to unlock free shipping"},
+            {"type":"header","content":"Design"},
+            {"type":"select","id":"font_type","label":"Font","options":[{"value":"heading","label":"Heading Font"},{"value":"body","label":"Body Font"}],"default":"body"},
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Top"},{"value":"right","label":"Bottom"}],"default":"left"},
+            {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+         ,{"type":"image","name":"Image","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"url","id":"link","label":"Link On Image","info":"Leave empty to not add link on Image"},
+            {"type":"image_picker","id":"image","label":"Image","info":"Recommended: 768x1024px, JPG format"},
+            {"type":"image_picker","id":"image_mobile","label":"Image (mobile)","info":"Recommended: 768x1024px, JPG format. Leave empty to use desktop image"},
+            {"type":"header","content":"Loading & Performance"},
+            {"type": "select","id": "image_loading","label": "Image loading","options": [{"value": "eager","label": "Eager (loads immediately)"},{"value": "lazy","label": "Lazy (loads when visible)"}],"default": "lazy","info": "Use 'Eager' only for images at the top of the page"},
+            {"type": "select","id": "image_performance","label": "Image Performance","options": [{"value": "high","label": "High (loads immediately)"},{"value": "low","label": "Low (loads when visible)"}],"default": "low","info": "Use 'High' only for images at the top of the page"},
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Top"},{"value":"right","label":"Bottom"}],"default":"left"},
+            {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]} 
+         ,{"type":"button","name":"Button","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"url","id":"button_link","label":"Button Link"},
+            {"type":"inline_richtext","id":"button_label","label":"Button Label","default":"Button Label","info":"Supports bold and italic"},
+            {"type":"header","content":"Design"},
+            {"type":"select","id":"font_type","label":"Font","options":[{"value":"heading","label":"Heading Font"},{"value":"body","label":"Body Font"}],"default":"body"},
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Top"},{"value":"right","label":"Bottom"}],"default":"left"},
+            {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+         ,{"type":"checkout_button","name":"Checkout Button","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"url","id":"button_link","label":"Button Link"},
+            {"type":"inline_richtext","id":"button_label","label":"Button Label","default":"Button Label","info":"Supports bold and italic"},
+            {"type":"header","content":"Design"},
+            {"type":"select","id":"font_type","label":"Font","options":[{"value":"heading","label":"Heading Font"},{"value":"body","label":"Body Font"}],"default":"body"},
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Top"},{"value":"right","label":"Bottom"}],"default":"left"},
+            {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+        ,{"type":"icon_with_text","name":"Icon With Text","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"image_picker","id":"image","label":"Icon","info":"Recommended: 768x1024px, JPG format"},
+            {"type":"image_picker","id":"image_mobile","label":"Image (mobile)","info":"Recommended: 768x1024px, JPG format. Leave empty to use desktop image"},
+            {"type":"liquid","id":"liquid","label":"icon Code","default":"Add Your Code Here","info":"Supports Html and Liquid Codes"},
+            {"type":"inline_richtext","id":"title","label":"Title","default":"Add Your Title","info":"Supports bold and italic"},
+            {"type":"richtext","id":"text","label":"Text","default":"<p>Add Your Description</p>","info":"Supports bold, italic,list,paragraph and links"},
+            {"type":"header","content":"Design"},
+            {"type":"select","id":"font_type_title","label":"Title Font","options":[{"value":"heading","label":"Heading Font"},{"value":"body","label":"Body Font"}],"default":"heading"},
+            {"type":"select","id":"font_type_text","label":"Text Font","options":[{"value":"heading","label":"Heading Font"},{"value":"body","label":"Body Font"}],"default":"body"},
+            {"type":"header","content":"Loading & Performance"},
+            {"type": "select","id": "image_loading","label": "Image loading","options": [{"value": "eager","label": "Eager (loads immediately)"},{"value": "lazy","label": "Lazy (loads when visible)"}],"default": "lazy","info": "Use 'Eager' only for images at the top of the page"},
+            {"type": "select","id": "image_performance","label": "Image Performance","options": [{"value": "high","label": "High (loads immediately)"},{"value": "low","label": "Low (loads when visible)"}],"default": "low","info": "Use 'High' only for images at the top of the page"},
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Top"},{"value":"right","label":"Bottom"}],"default":"left"},
+            {"type":"header","content":"Advanced"},
+            {"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+        ,{"type":"liquid","name":"Liquid Code","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"liquid","id":"liquid","label":"Liquid Code","default":"Add Your Code Here","info":"Supports Html,CSS,Js and Liquid Codes"},
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Top"},{"value":"right","label":"Bottom"}],"default":"left"},
+            {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+          , {"type":"video","name":"Video","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"video","id":"video","label":"Video"},
+            {"type":"header","content":"Layout"},
+            {"type":"header","content":"Advanced"},
+            {"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+        ,{"type":"icon_with_text_grid","name":"icon With Text Grid","settings":[
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Top"},{"value":"right","label":"Bottom"}],"default":"left"},
+            {"type":"header","content":"Advanced"},
+            {"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+        ,{"type":"icon_with_text_item","name":"Icon With Text Item","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"image_picker","id":"image","label":"Icon","info":"Recommended: 768x1024px, JPG format"},
+            {"type":"image_picker","id":"image_mobile","label":"Image (mobile)","info":"Recommended: 768x1024px, JPG format. Leave empty to use desktop image"},
+            {"type":"liquid","id":"liquid","label":"icon Code","default":"Add Your Code Here","info":"Supports Html and Liquid Codes"},
+            {"type":"inline_richtext","id":"title","label":"Title","default":"Add Your Title","info":"Supports bold and italic"},
+            {"type":"richtext","id":"text","label":"Text","default":"<p>Add Your Description</p>","info":"Supports bold, italic,list,paragraph and links"},
+            {"type":"header","content":"Design"},
+            {"type":"select","id":"font_type_title","label":"Title Font","options":[{"value":"heading","label":"Heading Font"},{"value":"body","label":"Body Font"}],"default":"heading"},
+            {"type":"select","id":"font_type_text","label":"Text Font","options":[{"value":"heading","label":"Heading Font"},{"value":"body","label":"Body Font"}],"default":"body"},
+            {"type":"header","content":"Loading & Performance"},
+            {"type": "select","id": "image_loading","label": "Image loading","options": [{"value": "eager","label": "Eager (loads immediately)"},{"value": "lazy","label": "Lazy (loads when visible)"}],"default": "lazy","info": "Use 'Eager' only for images at the top of the page"},
+            {"type": "select","id": "image_performance","label": "Image Performance","options": [{"value": "high","label": "High (loads immediately)"},{"value": "low","label": "Low (loads when visible)"}],"default": "low","info": "Use 'High' only for images at the top of the page"},
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Top"},{"value":"right","label":"Bottom"}],"default":"left"},
+            {"type":"header","content":"Advanced"},
+            {"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+         ,{"type":"total","name":"Total","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"richtext","id":"total","label":"Total","default":"<p>Total:</p>","info":"Supports bold, italic,list,paragraph and links"},
+            {"type":"header","content":"Design"},
+            {"type":"select","id":"font_type","label":"Font","options":[{"value":"heading","label":"Heading Font"},{"value":"body","label":"Body Font"}],"default":"body"},
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Top"},{"value":"right","label":"Bottom"}],"default":"left"},
+            {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+         ,{"type":"related_products","name":"Realted Products","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"collection","id":"collection","label":"Collection"},
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Top"},{"value":"right","label":"Bottom"}],"default":"left"},
+            {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+         ,{"type":"cart_items","name":"Cart Items","settings":[
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Top"},{"value":"right","label":"Bottom"}],"default":"left"},
+            {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+        ,{"type":"shipping_protection","name":"Shipping Protection","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"product","id":"product","label":"Shipping Product"},
+            {"type":"image_picker","id":"image","label":"Image","info":"Recommended: 768x1024px, JPG format"},
+            {"type":"image_picker","id":"image_mobile","label":"Image (mobile)","info":"Recommended: 768x1024px, JPG format. Leave empty to use desktop image"},
+            {"type":"inline_richtext","id":"title","label":"Title","default":"Add Your Title","info":"Supports bold and italic"},
+            {"type":"richtext","id":"text","label":"Text","default":"<p>Add Your Description</p>","info":"Supports bold, italic,list,paragraph and links"},
+            {"type":"header","content":"Design"},
+            {"type":"select","id":"font_type_title","label":"Title Font","options":[{"value":"heading","label":"Heading Font"},{"value":"body","label":"Body Font"}],"default":"heading"},
+            {"type":"select","id":"font_type_text","label":"Text Font","options":[{"value":"heading","label":"Heading Font"},{"value":"body","label":"Body Font"}],"default":"body"},
+            {"type":"header","content":"Loading & Performance"},
+            {"type": "select","id": "image_loading","label": "Image loading","options": [{"value": "eager","label": "Eager (loads immediately)"},{"value": "lazy","label": "Lazy (loads when visible)"}],"default": "lazy","info": "Use 'Eager' only for images at the top of the page"},
+            {"type": "select","id": "image_performance","label": "Image Performance","options": [{"value": "high","label": "High (loads immediately)"},{"value": "low","label": "Low (loads when visible)"}],"default": "low","info": "Use 'High' only for images at the top of the page"},
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Top"},{"value":"right","label":"Bottom"}],"default":"left"},
+            {"type":"header","content":"Advanced"},
+            {"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+        ],"presets":[{"name":"Cart Drawer","category": "Hitesh kaushal"}]}
+{% endschema %}

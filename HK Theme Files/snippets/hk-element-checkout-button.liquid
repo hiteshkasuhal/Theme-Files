@@ -1,0 +1,181 @@
+{%  assign button_label = block.settings.button_label %}
+{%  capture button_content %}
+{%- for block in section.blocks -%} 
+{%- case block.type -%} 
+{%- when 'variant' -%} 
+{% assign index = block.settings.index | minus:1 %}
+{% if block.settings.active == true %}
+{% assign active_variant = product.variants[index] %}
+{%  endif %}
+{% assign variant = product.variants[index] %}
+{%  assign compare_price = variant.price  %}
+{%  if variant.compare_at_price > variant.price %}
+{%  assign compare_price = variant.compare_at_price  %}
+{% endif %}
+{%  assign price = variant.price  %}
+{%  assign price_sub = variant.selling_plan_allocations.first.per_delivery_price %}
+{% capture price_content %}
+<span class="hk-sub-trigger" sub_tab="1">
+{{ price_sub | money }}{%  if compare_price > price_sub %} <s>{{ compare_price | money }}</s>{% endif %}
+</span>
+<span class="hk-sub-trigger" sub_tab="2" style="display:none;">
+{{ price | money }}{%  if compare_price > price %} <s>{{ compare_price | money }}</s>{% endif %}
+</span>
+{% endcapture %}
+<span class="hk-variant-trigger{% if variant.available %}{% else %} hk-sold-out{% endif %}{% if block.settings.active == true %} hk-active{% endif %}" variant_id="{{ variant.id }}"{% if block.settings.active != true %} style="display:none;"{% endif %}>
+ {% if variant.available %} {{ button_label | replace:'[price]',price_content }}{% else %}Sold Out{% endif %}
+</span>
+{%  endcase %}
+{%  endfor %} 
+  {% endcapture %}
+<div class="hk-element hk-element-button {{ block.settings.custom_class }} hk-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<div class="hk-element-button-{{ block.id }} hk-font-{{ block.settings.font_type }}">
+<button class="hk-button hk-checkout-button hk-trigger-{{ section.id }} hk-font-body"  variant_id="{{ active_variant.id }}" selling_plan="{{ active_variant.selling_plan_allocations.first.selling_plan.id }}">
+  {{ button_content }}
+</button></div>
+<script>
+
+function refreshCartDrawer2() {
+  $.get(window.location.href, function (response) {
+    var newContent = $(response).find('.hk-cart-drawer-js').html();
+    $('.hk-cart-drawer-js').html(newContent);
+    $('.hk-cart-drawer-js').removeClass('hk-loading-cart');
+    updateCartCount2();
+  });
+  
+}
+
+function updateCartCount2() {
+  return fetch('/cart.js')
+    .then(res => res.json())
+    .then(cart => {
+
+      var shippingVariantId = '53900035981639';
+
+      var count = 0;
+
+      cart.items.forEach(function (item) {
+        // exclude shipping protection
+        if (item.variant_id != shippingVariantId) {
+          count += item.quantity;
+        }
+      });
+
+      $('.hk-cart-count').text(count);
+
+      if (count > 0) {
+        $('.hk-cart-count').show();
+      } else {
+        $('.hk-cart-count').hide();
+      }
+
+      return count;
+    })
+    .catch(err => console.error('Cart count error:', err));
+}
+
+  $(document).on("click", '.hk-trigger-{{ section.id }}', function (e) {
+  e.preventDefault();
+
+  var $btn = $(this);
+
+  // prevent multiple clicks
+  if ($btn.hasClass('hk-loading')) return;
+
+  $btn.addClass('hk-loading');
+
+  var items = [];
+
+  var SHIPPING_VARIANT_ID = 53900035981639;
+  // main product
+  var variant_id = $btn.attr('variant_id');
+  var selling_plan = $btn.attr('selling_plan');
+
+  var item = {
+    id: parseInt(variant_id),
+    quantity: 1
+  };
+
+  // add selling plan if exists
+  if (selling_plan) {
+    item.selling_plan = parseInt(selling_plan);
+  }
+
+  items.push(item);
+$('.hk-element-sub-option.hk-active .hk-free-product-details:nth-child(1)').each(function(){
+var free_variant_id = $(this).attr('variant_id');
+  var free_item = {
+    id: parseInt(free_variant_id),
+    quantity: 1
+  };
+  items.push(free_item);
+});
+
+
+ // -----------------------------
+  // STEP 2: Check cart safely
+  // -----------------------------
+  $.get('/cart.js')
+    .done(function(cart) {
+
+      var exists = false;
+
+      if (cart && Array.isArray(cart.items)) {
+        exists = cart.items.some(function(item) {
+          return item.id == SHIPPING_VARIANT_ID;
+        });
+      }
+
+      // -----------------------------
+      // STEP 3: Add shipping protection if missing
+      // -----------------------------
+      if (!exists) {
+        items.push({
+          id: SHIPPING_VARIANT_ID,
+          quantity: 1
+        });
+      }
+
+      addToCart(items);
+      
+
+    })
+    .fail(function() {
+      // fallback: still proceed without check
+      addToCart(items);
+    });
+
+
+
+
+
+  function addToCart(items) {
+  $.ajax({
+    type: 'POST',
+    url: '/cart/add.js',
+    data: JSON.stringify({
+      items: items
+    }),
+    dataType: 'json',
+    contentType: 'application/json',
+
+    success: function () {
+
+    },
+
+    complete: function () {
+      setTimeout(function () {
+        $btn.removeClass('hk-loading');
+    refreshCartDrawer2();
+    $('.hk-cart-drawer').addClass('active');
+    $('.hk-drawer-cart-bg').show();
+    $('body').addClass('hk-overflow-hidden');
+      }, 500);
+    }
+  });
+}
+
+});
+</script>
+
+</div>

@@ -1,0 +1,47 @@
+{%  assign counter_block = block %}
+{% capture slider_config %}
+{
+  "dots": true,
+  "arrows": true,
+  "speed": 400,
+  "slidesToShow": {{ block.settings.columns_desktop }},
+  "slidesToScroll": 1,
+  "autoplay": false,
+  "infinite": false,
+  "cssEase": "linear",
+  "prevArrow": ".hk-slider-prev-{{ block.id }}",
+  "nextArrow": ".hk-slider-next-{{ block.id }}",
+  "responsive": [
+    {
+      "breakpoint": 915,
+      "settings": {
+        "slidesToShow": {{ block.settings.columns_mobile }},
+        "slidesToScroll": 1,
+        "centerMode": true,
+      "infinite": true,
+        "centerPadding": "54px"
+      }
+    }
+  ]
+}
+{% endcapture %} 
+<div class="hk-element hk-element-slider-main {{ block.settings.custom_class }} hk-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<div class="hk-slick-slider" data-slider-config='{{ slider_config | strip }}'>
+ {%- for block in section.blocks -%} 
+            {%- case block.type -%}  
+                {%- when 'review_slide' -%} 
+                    {%  render 'hk-review-slide', block:block, counter_block:counter_block %} 
+            {%  endcase %}
+        {%  endfor %} 
+</div>
+<div class="hk-slider-navigation hk-hide-mobile">
+<button class="hk-slider-prev-{{  block.id }} hk-slider-button hk-slider-prev"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+  <circle cx="15.6" cy="15.6" r="15" fill="white" fill-opacity="0.15" stroke="white" stroke-width="1.2"/>
+  <path d="M18 14.7001C18.4971 14.7001 18.9 15.103 18.9 15.6001C18.9 16.0972 18.4971 16.5001 18 16.5001L18 15.6001L18 14.7001ZM10.1636 16.2365C9.81213 15.885 9.81213 15.3152 10.1636 14.9637L15.8912 9.23614C16.2426 8.88466 16.8125 8.88466 17.164 9.23614C17.5154 9.58761 17.5154 10.1575 17.164 10.5089L12.0728 15.6001L17.164 20.6913C17.5154 21.0427 17.5154 21.6126 17.164 21.9641C16.8125 22.3155 16.2426 22.3155 15.8912 21.9641L10.1636 16.2365ZM18 15.6001L18 16.5001L10.8 16.5001L10.8 15.6001L10.8 14.7001L18 14.7001L18 15.6001Z" fill="white"/>
+</svg></button>
+<button class="hk-slider-next-{{  block.id }} hk-slider-button hk-slider-next"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+  <circle cx="15.6" cy="15.6" r="15" fill="white" fill-opacity="0.15" stroke="white" stroke-width="1.2"/>
+  <path d="M13.2002 14.7001C12.7031 14.7001 12.3002 15.103 12.3002 15.6001C12.3002 16.0972 12.7031 16.5001 13.2002 16.5001L13.2002 15.6001L13.2002 14.7001ZM21.0366 16.2365C21.3881 15.885 21.3881 15.3152 21.0366 14.9637L15.309 9.23614C14.9576 8.88466 14.3877 8.88466 14.0362 9.23614C13.6848 9.58761 13.6848 10.1575 14.0362 10.5089L19.1274 15.6001L14.0362 20.6913C13.6848 21.0427 13.6848 21.6126 14.0362 21.9641C14.3877 22.3155 14.9576 22.3155 15.309 21.9641L21.0366 16.2365ZM13.2002 15.6001L13.2002 16.5001L20.4002 16.5001L20.4002 15.6001L20.4002 14.7001L13.2002 14.7001L13.2002 15.6001Z" fill="white"/>
+</svg></button>
+</div>
+</div>

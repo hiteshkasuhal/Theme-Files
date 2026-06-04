@@ -1,0 +1,26 @@
+
+<span class="hk-free-product-details" variant_id="{{ free_product.selected_or_first_available_variant.id }}">
+{% if badge != blank %}
+<span class="hk-free-product-badge">{{ badge }}</span>
+{% endif %}
+{% if title != blank %}
+<span class="hk-free-product-title">{{ title }}</span>
+{% endif %}
+{% if image != blank %}
+<span class="hk-free-product-image">
+{{ image | image_url: width: 200 | image_tag:
+  loading: 'lazy',
+  fetchpriority: 'low',
+  alt:image.alt,
+  widths: '375, 550, 750, 800'
+}} 
+</span>
+{% endif %}
+{% capture price_content  %}
+{% assign price = free_product.selected_or_first_available_variant.compare_at_price | money %}
+<s>{{ price }}</s>
+{% endcapture %}
+{% if text != blank %}
+<span class="hk-free-product-text">{{ text | replace:'[price]',price_content }}</span>
+{% endif %}
+</span>

@@ -1,0 +1,55 @@
+<style>
+:root {
+--hk-heading-font: {{ section.settings.heading_font }};
+--hk-body-font: {{ section.settings.body_font }};
+--hk-container-width: {{ section.settings.container_width }}px;
+}
+</style>
+
+{% schema %}
+{
+  "name": "Page Settings",
+  "tag": "header",
+  "class": "hk-page-settings",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Fonts"
+    },
+    {
+      "type": "text",
+      "id": "heading_font",
+      "label": "Heading Font Name",
+      "default": "Bebas Neue",
+      "info": "Heading Font Name"
+    },
+    {
+      "type": "text",
+      "id": "body_font",
+      "label": "Body Font Name",
+      "default": "Aeonik",
+      "info": "Body Font Name"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1500,
+      "max": 1600,
+      "step": 1,
+      "unit": "px",
+      "label": "Container Width",
+      "default": 1508
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page Settings"
+      ,"category": "Hitesh Kaushal"
+    }
+  ]
+}
+{% endschema %}

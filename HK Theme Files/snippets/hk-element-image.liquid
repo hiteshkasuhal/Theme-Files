@@ -1,0 +1,57 @@
+{%  if block.settings.image != blank %}
+<div class="hk-element hk-element-image-main {{ block.settings.custom_class }} hk-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<div class="hk-element-image">
+{% if block.settings.link != blank %}
+<a href="{{ block.settings.link }}">
+{%  endif %}
+{% if block.settings.image_mobile != blank %}
+  <div class="hk-media hk-hide-mobile">
+    {%  if block.settings.high_resolution == true %}
+ {{ block.settings.image | image_url: width: 1800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '1800'
+}}   
+    {%  else %}
+ {{ block.settings.image | image_url: width: 800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '375, 550, 750, 800'
+}}   
+    {%  endif %}
+</div>
+  <div class="hk-media hk-hide-desktop">
+ {{ block.settings.image_mobile | image_url: width: 800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image_mobile.alt,
+  widths: '375, 550, 750, 800'
+}}   
+</div>
+{% else %}
+  <div class="hk-media">
+    {%  if block.settings.high_resolution == true %}
+ {{ block.settings.image | image_url: width: 1800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '1800'
+}} 
+    {%  else %}
+ {{ block.settings.image | image_url: width: 800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '375, 550, 750, 800'
+}} 
+    {%  endif %}
+</div>
+{%  endif %}
+{% if block.settings.link != blank %}
+</a>
+{%  endif %}
+</div>
+</div>
+{% endif %}
