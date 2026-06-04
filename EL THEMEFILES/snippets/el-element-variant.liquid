@@ -1,0 +1,72 @@
+{% assign index = block.settings.index | minus:1 %}
+{% assign variant = product.variants[index] %}
+{%  assign compare_price = variant.price  %}
+{%  if variant.compare_at_price > variant.price %}
+{%  assign compare_price = variant.compare_at_price  %}
+{% endif %}
+{%  assign price = variant.price  %}
+{%  assign price_sub = variant.selling_plan_allocations.first.per_delivery_price %}
+
+{% capture per_price_content %}
+{% assign quantity = index | plus:1 %}
+<span class="el-sub-trigger" sub_tab="1">
+{{ price_sub | divided_by: quantity | money_without_trailing_zeros }} 
+</span>
+<span class="el-sub-trigger" sub_tab="2" style="display:none;">
+{{ price | divided_by: quantity | money_without_trailing_zeros }} 
+</span>
+{% endcapture %}
+<button class="el-element-variant{% if block.settings.active == true %} el-active{% endif %} el-font-body" variant_id="{{  variant.id  }}" selling_plan="{{ variant.selling_plan_allocations.first.selling_plan.id }}">
+<span class="el-variant-inner">
+{% if block.settings.badge != blank %}
+<span class="el-variant-badge">{{ block.settings.badge }}</span>
+{% endif %}
+{% if block.settings.title != blank %}
+<span class="el-variant-title">{{ block.settings.title }}</span>
+{% endif %}
+
+<span class="el-variant-price">
+<span class="el-sub-trigger" sub_tab="1">
+{{ price_sub | money_without_trailing_zeros }} 
+{% if compare_price > price_sub %}<s>{{ compare_price | money }}</s>{% endif %}
+</span>
+<span class="el-sub-trigger" sub_tab="2" style="display:none;">
+{{ price | money_without_trailing_zeros }} 
+{% if compare_price > price %}<s>{{ compare_price | money }}</s>{% endif %}
+</span>
+</span>
+
+{% if block.settings.image != blank %}
+{% if block.settings.image_mobile != blank %}
+<span class="el-variant-image el-hide-desktop">
+ {{ block.settings.image_mobile | image_url: width: 200 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image_mobile.alt,
+  widths: '375, 550, 750, 800'
+}} 
+</span>
+<span class="el-variant-image el-hide-mobile">
+ {{ block.settings.image | image_url: width: 200 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '375, 550, 750, 800'
+}} 
+</span>
+{% else %}
+<span class="el-variant-image">
+ {{ block.settings.image | image_url: width: 200 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '375, 550, 750, 800'
+}} 
+</span>
+{% endif %}
+{% endif %}
+{% if block.settings.text != blank %}
+<span class="el-variant-text">{{ block.settings.text | replace:'[per_price]',per_price_content }}</span>
+{% endif %}
+</span>
+</button>

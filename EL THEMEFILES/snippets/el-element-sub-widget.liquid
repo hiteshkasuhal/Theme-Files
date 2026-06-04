@@ -1,0 +1,108 @@
+<div class="el-element el-element-sub-options {{ block.settings.custom_class }} el-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<button class="el-element-sub-option el-active el-font-body" sub_tab="1">
+{% if block.settings.sub_badge != blank %}
+<span class="el-sub-option-sub-badge">{{ block.settings.sub_badge }}</span>
+{% endif %}
+<span class="el-sub-option-inner">
+<span class="el-sub-option-title-flex">
+
+<span class="el-sub-option-selector"><span class="el-sub-option-select"><svg xmlns="http://www.w3.org/2000/svg" width="37" height="37" viewBox="0 0 37 37" fill="none">
+  <path d="M32.3556 0H4.04444C1.81393 0 0 1.81393 0 4.04444V32.3556C0 34.5861 1.81393 36.4 4.04444 36.4H32.3556C34.5861 36.4 36.4 34.5861 36.4 32.3556V4.04444C36.4 1.81393 34.5861 0 32.3556 0ZM16.3133 27.2616L8.6814 19.6297L11.5408 16.7703L16.0423 21.2718L24.7358 10.8391L27.844 13.4276L16.3133 27.2616Z" fill="#CAAD58"/>
+</svg></span></span>
+<span class="el-sub-option-title-texts">
+{% if block.settings.sub_title != blank %}
+<span class="el-sub-option-title">{{ block.settings.sub_title }}</span>
+{% endif %}
+</span>
+</span>
+<span class="el-sub-option-price">
+{%- for block in section.blocks -%} 
+{%- case block.type -%} 
+{%- when 'variant' -%}  
+{% assign index = block.settings.index | minus:1 %}
+{% assign variant = product.variants[index] %}
+{%  assign compare_price = variant.price  %}
+{%  if variant.compare_at_price > variant.price %}
+{%  assign compare_price = variant.compare_at_price  %}
+{% endif %}
+{%  assign price = variant.price  %}
+{%  assign price_sub = variant.selling_plan_allocations.first.per_delivery_price %}
+<span class="el-variant-trigger{% if block.settings.active == true %} el-active{% endif %}" variant_id="{{ variant.id }}"{% if block.settings.active != true %} style="display:none;"{% endif %}>
+  {%  if compare_price > price_sub %} <span class="el-save-badge">SAVE {{ compare_price | minus:price_sub | times:100 | divided_by:compare_price | round }}%</span>{% endif %}
+{{ price_sub | money }} {%  if compare_price > price_sub %} <s>{{ compare_price | money }}</s>{% endif %}
+</span>
+{%  endcase %}
+{%  endfor %} 
+</span>
+</span>
+
+
+
+
+<span class="el-free-products-flex">
+
+{% if block.settings.free_product1 != blank %}
+{% assign free_product = block.settings.free_product1 %}
+{% assign title = block.settings.free_title1 %}
+{% assign image = block.settings.free_image1 %}
+{% assign text = block.settings.free_text1 %}
+{% assign badge = block.settings.free_badge1 %}
+{% render 'el-free-product', free_product:free_product,title:title,image:image,text:text ,badge:badge   %}
+{% endif %}
+
+{% if block.settings.free_product2 != blank %}
+{% assign free_product = block.settings.free_product2 %}
+{% assign title = block.settings.free_title2 %}
+{% assign image = block.settings.free_image2 %}
+{% assign text = block.settings.free_text2 %}
+{% assign badge = block.settings.free_badge2 %}
+{% render 'el-free-product', free_product:free_product,title:title,image:image,text:text ,badge:badge   %}
+{% endif %}
+
+{% if block.settings.free_product3 != blank %}
+{% assign free_product = block.settings.free_product3 %}
+{% assign title = block.settings.free_title3 %}
+{% assign image = block.settings.free_image3 %}
+{% assign text = block.settings.free_text3 %}
+{% assign badge = block.settings.free_badge3 %}
+{% render 'el-free-product', free_product:free_product,title:title,image:image,text:text ,badge:badge   %}
+{% endif %}
+</span>
+
+{% if block.settings.sub_text != blank %}
+<span class="el-sub-option-text">{{ block.settings.sub_text  }}</span>
+{% endif %}
+</button> 
+
+
+
+<button class="el-element-sub-option el-font-body" sub_tab="2">
+<span class="el-sub-option-inner">
+{% if block.settings.one_time_title != blank %}
+<span class="el-sub-option-title-flex">
+<span class="el-sub-option-selector"><span class="el-sub-option-select"></span></span>
+<span class="el-sub-option-title">{{ block.settings.one_time_title }}</span>
+</span>
+{% endif %}
+<span class="el-sub-option-price">
+{%- for block in section.blocks -%} 
+{%- case block.type -%} 
+{%- when 'variant' -%}  
+{% assign index = block.settings.index | minus:1 %}
+{% assign variant = product.variants[index] %}
+{%  assign compare_price = variant.price  %}
+{%  if variant.compare_at_price > variant.price %}
+{%  assign compare_price = variant.compare_at_price  %}
+{% endif %}
+{%  assign price = variant.price  %}
+<span class="el-variant-trigger{% if block.settings.active == true %} el-active{% endif %}" variant_id="{{ variant.id }}"{% if block.settings.active != true %} style="display:none;"{% endif %}>
+{{ price | money }} {%  if compare_price > price %} <s>{{ compare_price | money }}</s>{% endif %}
+</span>
+{%  endcase %}
+{%  endfor %} 
+</span>
+</span>
+</button> 
+
+
+</div>

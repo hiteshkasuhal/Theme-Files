@@ -1,0 +1,56 @@
+<div class="el-line-item el-custom-shipping-insurance el-free-item" data-key="{{ item.key }}" variant_id="{{ item.variant.id }}" selling_plan="{{ item.variant.selling_plan_allocations.first.selling_plan.id }}"
+quantity="{{ item.quantity }}">
+<div class="el-line-item-flex">
+<div class="el-line-item-left">
+<div class="el-line-item-image">
+{% assign feature_image = item.product.featured_image %}
+{% if item.variant.featured_image != blank %}
+{% assign feature_image = item.variant.featured_image %}
+{% endif %}
+ {{ feature_image | image_url: width: 200 | image_tag:
+  loading: 'lazy',
+  fetchpriority: 'low',
+  alt: feature_image.alt,
+  widths: '375, 550, 750, 800'
+}} 
+</div>
+<div class="el-line-item-details">
+<div class="el-item-title"><a href="{{ item.product.url }}">{{ item.product.title }}</a>
+</div>
+<div class="el-item-subtitle">{{ item.product.description | strip_html }}</div>
+  {% assign line_price = item.final_line_price %}
+  {% assign line_compare_price = item.final_line_price %}
+  {% if item.variant.compare_at_price > item.variant.price %}
+  {% assign line_compare_price = item.variant.compare_at_price | times:item.quantity %}
+  {% else %}
+  {% assign line_compare_price = item.variant.price | times:item.quantity %}
+    {% endif %}
+  {% if item.final_line_price > line_compare_price %}
+  {% assign line_compare_price = item.original_line_price %}
+    {% endif %}
+<div class="el-item-price-flex">
+<div class="el-item-price">
+  <span>FREE</span><s>{{ line_compare_price | money }}</s>
+</div>
+<div class="el-remove-fake">Remove</div>
+</div>
+<div class="el-quantity-main-flex">
+<div class="el-quantity-main">
+<button class="el-quantity-button el-quantity-minus">
+<svg xmlns="http://www.w3.org/2000/svg" width="8" height="1" viewBox="0 0 8 1" fill="none">
+  <path d="M0 0.8866V0H7.60445V0.8866H0Z" fill="#161616"/>
+</svg>
+</button>
+<input class="el-quantity-input" name="el-item-quantity" value="{{ item.quantity }}" readonly>
+<button class="el-quantity-button el-quantity-plus">
+<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
+  <path d="M0 3.1317H3.1317V0H4.0183V3.1317H7.15V4.0183H4.0183V7.1643H3.1317V4.0183H0V3.1317Z" fill="#161616"/>
+</svg>
+</button>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</div>

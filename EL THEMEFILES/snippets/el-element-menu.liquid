@@ -1,0 +1,12 @@
+<div class="el-element el-element-menu-main {{ block.settings.custom_class }} el-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+{% if block.settings.menu != blank %}
+    {% assign menu = block.settings.menu %}
+<div class="el-element el-element-menu">
+<div class="el-menu-list el-font-body">
+{% for link in menu.links %}
+<a href="{{ link.url }}">{{ link.title }}</a>
+{% endfor %}
+</div>
+</div>
+{%  endif %}
+</div>

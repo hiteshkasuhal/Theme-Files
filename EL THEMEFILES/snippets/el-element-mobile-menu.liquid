@@ -1,0 +1,11 @@
+{%  if block.settings.menu != blank %}
+<div class="el-drawer-bg el-drawer-menu-bg" style="display:none;"></div>
+<div class="el-element-drawer el-drawer-menu">
+<div class="el-drawer-menu-inner">
+<button class="el-mobile-menu-close">{{ block.settings.button_close }}</button>
+<div class="el-drawer-menu-content">
+{%  render 'el-element-menu', block:block %} 
+</div>
+</div>
+</div>
+{% endif %}

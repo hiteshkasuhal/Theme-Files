@@ -1,0 +1,15 @@
+<div class="el-line-item-main">
+<div class="el-line-item-grid">
+{% for item in cart.items %}
+{% if item.product.title contains 'Shipping Insurance' %}
+{%  render 'el-element-cart-item-shipping', block:block,item:item %} 
+{% else %}
+    {% if item.final_line_price > 0 %}
+{%  render 'el-element-cart-item', block:block,item:item %} 
+    {% else %}
+{%  render 'el-element-cart-item-free', block:block,item:item %} 
+{%  endif %}
+{%  endif %}
+{% endfor %}
+</div>
+</div>

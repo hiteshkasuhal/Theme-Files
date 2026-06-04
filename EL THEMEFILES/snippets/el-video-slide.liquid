@@ -1,0 +1,19 @@
+{%- if block.settings.video != blank -%}
+<div class="el-ugc-item {{ block.settings.custom_class }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<div class="el-video-wrapper el-media">
+{{ block.settings.video | media_tag: image_size: "master", autoplay: false, loop: true, controls: true, preload: "true", class:"el-video" }}
+ {{ block.settings.video.preview_image | image_url: width: 800 | image_tag:
+  loading: lazy,
+  fetchpriority: low,
+  alt:block.settings.video.preview_image.alt,
+  widths: '375, 550, 750, 800'
+}}   
+<div class="el-play-button">
+<span>
+<svg xmlns="http://www.w3.org/2000/svg" width="21" height="24" viewBox="0 0 21 24" fill="none">
+  <path d="M19.619 13.7518L3.6151 23.0377C2.25692 23.825 0.513916 22.8717 0.513916 21.2847V2.71281C0.513916 1.12826 2.2544 0.172502 3.6151 0.96226L19.619 10.2482C19.928 10.4246 20.1848 10.6795 20.3634 10.9872C20.542 11.2948 20.6361 11.6442 20.6361 12C20.6361 12.3558 20.542 12.7052 20.3634 13.0128C20.1848 13.3205 19.928 13.5754 19.619 13.7518Z" fill="white"/>
+</svg></span>
+</div>
+</div>
+</div>
+ {%- endif -%}

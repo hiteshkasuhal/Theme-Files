@@ -1,0 +1,70 @@
+<div class="el-element el-element-collection-main {{ block.settings.custom_class }} el-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<div class="el-element-collection-grid">
+{% for product in block.settings.collection.products %}
+{% if forloop.index == 4 %}
+ {%- for block in section.blocks -%} 
+            {%- case block.type -%} 
+                {%- when 'icon_with_text' -%} 
+<div class="el-collection-grid-item el-collection-grid-item-banner">
+<span class="el-countdown-wrapper">
+<span class="el-countdown-js">
+<span class="el-countdown-hour"><span class="el-countdown-hour-js">12</span>HRS</span>
+<span class="el-countdown-min"><span class="el-countdown-min-js">12</span>MIN</span> 
+<span class="el-countdown-sec"><span class="el-countdown-sec-js">12</span>SEC</span>
+</span>
+</span>
+
+
+{% assign date = "now" | date: '%s' %}
+{% assign date_new = 1 | times: 24 | times: 60 | times: 60 %}
+<script defer="defer">
+  
+  // Set the date we're counting down to
+var countDownDate = new Date("{{date_new}}").getTime();
+
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+  // Get today's date and time
+  var now = new Date().getTime();
+    
+  // Find the distance between now and the count down date
+  var distance = countDownDate - now;
+    
+  // Time calculations for days, hours, minutes and seconds
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    if (hours<10) {
+	hours = '0'+hours;
+	}
+    if (minutes<10) {
+	minutes = '0'+minutes;
+	}
+    if (seconds<10) {
+	seconds = '0'+seconds;
+	}
+    
+    $('.el-countdown-js .el-countdown-hour-js').html(hours);
+    $('.el-countdown-js .el-countdown-min-js').html(minutes);
+    $('.el-countdown-js .el-countdown-sec-js').html(seconds);
+  // If the count down is over, write some text 
+  if (distance < 0) {
+    clearInterval(x);
+    //document.getElementById("demo").innerHTML = "EXPIRED";
+  }
+}, 1000);
+</script>
+                    {%  render 'el-element-icon-with-text', block:block %}  
+</div>
+            {%  endcase %}
+        {%  endfor %} 
+{% endif %}
+
+<div class="el-collection-grid-item">
+{%  render 'el-element-product-card', product:product %} 
+</div>
+{% endfor %}
+</div>
+</div>

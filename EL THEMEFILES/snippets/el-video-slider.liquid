@@ -1,0 +1,32 @@
+{%  assign counter_block = block %}
+{% capture slider_config %}
+{
+  "dots": true,
+  "arrows": false,
+  "speed": 400,
+  "slidesToShow": {{ block.settings.columns_desktop }},
+  "slidesToScroll": 1,
+  "autoplay": false,
+  "infinite": true,
+  "cssEase": "linear",
+  "responsive": [
+    {
+      "breakpoint": 915,
+      "settings": {
+        "slidesToShow": {{ block.settings.columns_mobile }},
+        "slidesToScroll": 1
+      }
+    }
+  ]
+}
+{% endcapture %}
+<div class="el-element el-element-slider-main {{ block.settings.custom_class }} el-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<div class="el-slick-slider" data-slider-config='{{ slider_config | strip }}'>
+ {%- for block in section.blocks -%} 
+            {%- case block.type -%}  
+                {%- when 'video_slide' -%} 
+                    {%  render 'el-video-slide', block:block, counter_block:counter_block %} 
+            {%  endcase %}
+        {%  endfor %} 
+</div>
+</div>

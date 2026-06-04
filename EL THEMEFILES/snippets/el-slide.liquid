@@ -1,0 +1,52 @@
+<div class="el-element el-element-slide {{ block.settings.custom_class }} el-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<div class="el-slide_main">
+<div class="els-slide-image">
+{% if block.settings.image != blank %}
+{% if block.settings.image_mobile != blank %}
+  <div class="el-media el-hide-mobile">
+ {{ block.settings.image | image_url: width: 800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '375, 550, 750, 800'
+}}   
+</div>
+  <div class="el-media el-hide-desktop">
+ {{ block.settings.image_mobile | image_url: width: 800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image_mobile.alt,
+  widths: '375, 550, 750, 800'
+}}   
+</div>
+{% else %}
+  <div class="el-media">
+ {{ block.settings.image | image_url: width: 800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '375, 550, 750, 800'
+}} 
+</div>
+{%  endif %}
+{%  endif %}
+{%  if block.settings.liquid != blank %}
+<div class="el-element-slide-svg el-media">
+<div class="el-element-svg">{{  block.settings.liquid }}</div>
+</div>
+{% endif %}
+</div>
+<div class="el-element-slide-texts">
+{%  if block.settings.title != blank %}
+<div class="el-element-title-main">
+<div class="el-element-title el-element el-font-{{ counter_block.settings.font_type_title }}">{{  block.settings.title }}</div>
+</div>
+{% endif %}
+{%  if block.settings.text != blank %}
+<div class="el-element-text-main">
+<div class="el-element-text el-element el-font-{{ counter_block.settings.font_type_text }}">{{  block.settings.text }}</div>
+</div>
+{% endif %}
+</div>
+</div>
+</div>

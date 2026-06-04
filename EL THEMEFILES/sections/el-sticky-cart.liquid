@@ -1,0 +1,213 @@
+{%- style -%}
+.el-section-bg-{{ section.id }} {
+    background-color:{{ section.settings.background_color }};
+    color:{{ section.settings.text_color }};
+    }
+{% if section.settings.background_image != blank %}
+.el-section-bg-{{ section.id }} {
+      background-image:url({{section.settings.background_image | image_url}});
+    background-size: cover;
+    background-attachment: unset;
+    background-repeat: no-repeat;
+    background-position: center;
+    }
+  {% endif %}
+{% if section.settings.background_image_mobile != blank %}
+  @media screen and (max-width: 915px) {
+    .el-section-bg-{{ section.id }} {
+      background-image:url({{section.settings.background_image_mobile | image_url}});
+    }
+  }
+  {% endif %}
+  @media screen and (max-width: 915px) {
+    .el-section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+  @media screen and (min-width: 915px) {
+    .el-section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }  
+{%- endstyle -%}
+<div class="el-section-bg-{{ section.id }} el-sticky-atc {{ section.settings.custom_class }}" {% if section.settings.custom_id != blank %} id="{{ section.settings.custom_id }}" {% endif %}>
+  <div class="el-container el-section-{{ section.id }}-padding">
+    <div class="el-sticky-atc-content el-text-{{ section.settings.text_alignment }}-desktop el-text-{{ section.settings.text_alignment_mobile }}-mobile"> 
+    <div class="el-sticky-atc-flex">
+    <div class="el-sticky-atc-column el-sticky-atc-column1">
+        {%- for block in section.blocks -%} 
+            {% if block.settings.position == 'left' %}
+            {%- case block.type -%} 
+                {%- when 'heading' -%} 
+                    {%  render 'el-element-heading', block:block %} 
+                {%- when 'richtext' -%} 
+                    {%  render 'el-element-richtext', block:block %} 
+                {%- when 'image' -%} 
+                    {%  render 'el-element-image', block:block %} 
+                {%- when 'button' -%} 
+                    {%  render 'el-element-button', block:block %} 
+                {%- when 'icon_with_text' -%} 
+                    {%  render 'el-element-icon-with-text', block:block %} 
+                {%- when 'liquid' -%} 
+                    {%  render 'el-element-liquid', block:block %} 
+                {%- when 'stock' -%} 
+                    {%  render 'el-element-stock', block:block %} 
+            {%  endcase %}
+            {% endif %}
+        {%  endfor %}  
+    </div>
+    <div class="el-sticky-atc-column el-sticky-atc-column2">
+        {%- for block in section.blocks -%} 
+            {% if block.settings.position == 'right' %}
+            {%- case block.type -%} 
+                {%- when 'heading' -%} 
+                    {%  render 'el-element-heading', block:block %} 
+                {%- when 'richtext' -%} 
+                    {%  render 'el-element-richtext', block:block %} 
+                {%- when 'image' -%} 
+                    {%  render 'el-element-image', block:block %} 
+                {%- when 'button' -%} 
+                    {%  render 'el-element-button', block:block %} 
+                {%- when 'icon_with_text' -%} 
+                    {%  render 'el-element-icon-with-text', block:block %} 
+                {%- when 'liquid' -%} 
+                    {%  render 'el-element-liquid', block:block %} 
+                {%- when 'stock' -%} 
+                    {%  render 'el-element-stock', block:block %} 
+            {%  endcase %}
+            {% endif %}
+        {%  endfor %}  
+    </div>
+    </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{"name":"Sticky ATC","tag":"section","class":"sticky-atc","settings":[
+    {"type":"header","content":"Functionality"},
+    {"type":"liquid","id":"hidden_classes","label":"Classes","default":"Add Your Classes Here","info":"Add Classes on which ATC should be hidden"},
+    {"type":"header","content":"Design"},
+    {"type":"image_picker","id":"background_image","label":"Background image","info":"Recommended: 1920x1080px, JPG format, under 200KB"},
+    {"type":"image_picker","id":"background_image_mobile","label":"Background image (mobile)","info":"Recommended: 768x1024px, JPG format. Leave empty to use desktop image"},
+    {"type":"color","id":"background_color","label":"Background color","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text color","default":"#000000","info":"Must have sufficient contrast with background (check https://webaim.org/resources/contrastchecker/)"},
+    {"type":"header","content":"Layout"},
+    {"type":"select","id":"text_alignment","label":"Text alignment (desktop)","options":[{"value":"left","label":"Left"},{"value":"center","label":"Center"},{"value":"right","label":"Right"}],"default":"center"},
+    {"type":"range","id":"padding_top","min":0,"max":100,"step":1,"unit":"px","label":"Top spacing (desktop)","default":0},
+    {"type":"range","id":"padding_bottom","min":0,"max":100,"step":1,"unit":"px","label":"Bottom spacing (desktop)","default":0},
+    {"type":"header","content":"Mobile Settings"},
+    {"type":"select","id":"text_alignment_mobile","label":"Text alignment (mobile)","options":[{"value":"left","label":"Left"},{"value":"center","label":"Center"},{"value":"right","label":"Right"}],"default":"center"},
+    {"type":"range","id":"padding_top_mobile","min":0,"max":100,"step":1,"unit":"px","label":"Top spacing (mobile)","default":0},
+    {"type":"range","id":"padding_bottom_mobile","min":0,"max":100,"step":1,"unit":"px","label":"Bottom spacing (mobile)","default":0},
+    {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}],
+    "blocks":[
+        {"type":"heading","name":"Heading","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"inline_richtext","id":"text","label":"Text","default":"Add Your Heading","info":"Supports bold, italic, and links"},
+            {"type":"header","content":"Design"},
+            {"type":"checkbox","id":"h1","label":"Use H1","info":"Checked only for 1 Heading at the top of the page"},
+            {"type":"select","id":"font_type","label":"Font","options":[{"value":"heading","label":"Heading Font"},{"value":"body","label":"Body Font"}],"default":"heading"},
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Left Column"},{"value":"right","label":"Right Column"}],"default":"left"},
+            {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+         ,{"type":"richtext","name":"RichText","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"richtext","id":"text","label":"Text","default":"<p>Add Your Description</p>","info":"Supports bold, italic,list,paragraph and links"},
+            {"type":"header","content":"Design"},
+            {"type":"select","id":"font_type","label":"Font","options":[{"value":"heading","label":"Heading Font"},{"value":"body","label":"Body Font"}],"default":"body"},
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Left Column"},{"value":"right","label":"Right Column"}],"default":"left"},
+            {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+         ,{"type":"image","name":"Image","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"url","id":"link","label":"Link On Image","info":"Leave empty to not add link on Image"},
+            {"type":"image_picker","id":"image","label":"Image","info":"Recommended: 768x1024px, JPG format"},
+            {"type":"image_picker","id":"image_mobile","label":"Image (mobile)","info":"Recommended: 768x1024px, JPG format. Leave empty to use desktop image"},
+            {"type":"header","content":"Loading & Performance"},
+            {"type": "select","id": "image_loading","label": "Image loading","options": [{"value": "eager","label": "Eager (loads immediately)"},{"value": "lazy","label": "Lazy (loads when visible)"}],"default": "lazy","info": "Use 'Eager' only for images at the top of the page"},
+            {"type": "select","id": "image_performance","label": "Image Performance","options": [{"value": "high","label": "High (loads immediately)"},{"value": "low","label": "Low (loads when visible)"}],"default": "low","info": "Use 'High' only for images at the top of the page"},
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Left Column"},{"value":"right","label":"Right Column"}],"default":"left"},
+            {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]} 
+         ,{"type":"button","name":"Button","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"url","id":"button_link","label":"Button Link"},
+            {"type":"inline_richtext","id":"button_label","label":"Button Label","default":"Button Label","info":"Supports bold and italic"},
+            {"type":"header","content":"Design"},
+            {"type":"select","id":"font_type","label":"Font","options":[{"value":"heading","label":"Heading Font"},{"value":"body","label":"Body Font"}],"default":"body"},
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Left Column"},{"value":"right","label":"Right Column"}],"default":"left"},
+            {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+        ,{"type":"icon_with_text","name":"Icon With Text","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"image_picker","id":"image","label":"Icon","info":"Recommended: 768x1024px, JPG format"},
+            {"type":"image_picker","id":"image_mobile","label":"Image (mobile)","info":"Recommended: 768x1024px, JPG format. Leave empty to use desktop image"},
+            {"type":"liquid","id":"liquid","label":"icon Code","default":"Add Your Code Here","info":"Supports Html and Liquid Codes"},
+            {"type":"inline_richtext","id":"title","label":"Title","default":"Add Your Title","info":"Supports bold and italic"},
+            {"type":"richtext","id":"text","label":"Text","default":"<p>Add Your Description</p>","info":"Supports bold, italic,list,paragraph and links"},
+            {"type":"header","content":"Design"},
+            {"type":"select","id":"font_type_title","label":"Title Font","options":[{"value":"heading","label":"Heading Font"},{"value":"body","label":"Body Font"}],"default":"heading"},
+            {"type":"select","id":"font_type_text","label":"Text Font","options":[{"value":"heading","label":"Heading Font"},{"value":"body","label":"Body Font"}],"default":"body"},
+            {"type":"header","content":"Loading & Performance"},
+            {"type": "select","id": "image_loading","label": "Image loading","options": [{"value": "eager","label": "Eager (loads immediately)"},{"value": "lazy","label": "Lazy (loads when visible)"}],"default": "lazy","info": "Use 'Eager' only for images at the top of the page"},
+            {"type": "select","id": "image_performance","label": "Image Performance","options": [{"value": "high","label": "High (loads immediately)"},{"value": "low","label": "Low (loads when visible)"}],"default": "low","info": "Use 'High' only for images at the top of the page"},
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Left Column"},{"value":"right","label":"Right Column"}],"default":"left"},
+            {"type":"header","content":"Advanced"},
+            {"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+        ,{"type":"liquid","name":"Liquid Code","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"liquid","id":"liquid","label":"Liquid Code","default":"Add Your Code Here","info":"Supports Html,CSS,Js and Liquid Codes"},
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Left Column"},{"value":"right","label":"Right Column"}],"default":"left"},
+            {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},
+            {"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+         ,{"type":"stock","name":"Stock","settings":[
+            {"type":"header","content":"Content"},
+            {"type":"richtext","id":"text","label":"Text","default":"<p>Add Your Description</p>","info":"Supports bold, italic,list,paragraph and links."},
+            {"type":"number","id":"date","label":"Date","default":3,"info":"Use [date] in above text to display date"},
+            {"type":"header","content":"Design"},
+            {"type":"select","id":"font_type","label":"Font","options":[{"value":"heading","label":"Heading Font"},{"value":"body","label":"Body Font"}],"default":"body"},
+            {"type":"header","content":"Layout"},
+            {"type":"select","id":"position","label":"Column Position","options":[{"value":"left","label":"Left Column"},{"value":"right","label":"Right Column"}],"default":"left"},
+            {"type":"header","content":"Advanced"},{"type":"text","id":"custom_id","label":"Custom CSS ID","info":"For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"},{"type":"text","id":"custom_class","label":"Custom CSS class","info":"For additional styling. Separate multiple classes with spaces"}]}
+        ],"presets":[{"name":"Sticky ATC","category": "Hitesh Kaushal"}]}
+{% endschema %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const sticky = document.querySelector('.el-sticky-atc');
+  
+  // Define elements you want to track (update selectors as needed)
+  const targets = document.querySelectorAll('{{ section.settings.hidden_classes }}');
+
+  // Safety checks
+  if (!sticky || !targets.length) return;
+
+  let visibleMap = new Map();
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      visibleMap.set(entry.target, entry.isIntersecting);
+    });
+
+    // Check if ANY target is visible
+    const anyVisible = Array.from(visibleMap.values()).some(v => v === true);
+
+    if (anyVisible) {
+      sticky.classList.remove('el-active');
+    } else {
+      sticky.classList.add('el-active');
+    }
+  }, {
+    root: null,
+    threshold: 0.1 // adjust based on when you want it considered "visible"
+  });
+
+  targets.forEach(el => {
+    visibleMap.set(el, false);
+    observer.observe(el);
+  });
+});
+</script>

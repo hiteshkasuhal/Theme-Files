@@ -1,0 +1,10 @@
+<div class="el-element el-element-variants {{ block.settings.custom_class }} el-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+{%  assign index = 0 %}
+{%- for block in section.blocks -%} 
+{%- case block.type -%} 
+{%- when 'variant' -%}  
+{%  assign index = index | plus:1 %}
+{%  render 'el-element-variant', block:block, index:index %} 
+{%  endcase %}
+{%  endfor %}  
+</div>

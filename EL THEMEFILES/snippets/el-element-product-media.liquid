@@ -1,0 +1,80 @@
+{%  assign counter_block = block %}
+{% capture slider_config_thumb %}
+{
+  "dots": false,
+  "arrows": false,
+  "speed": 400,
+  "slidesToShow": {{ block.settings.columns_desktop }},
+  "slidesToScroll": 1,
+  "autoplay": false,
+  "infinite": false,
+  "cssEase": "linear",
+  "vertical": true,
+  "asNavFor": ".el-slider-product-media-main",
+  "focusOnSelect": true,
+  "responsive": [
+    {
+      "breakpoint": 915,
+      "settings": {
+        "slidesToShow": {{ block.settings.columns_mobile }},
+  "vertical": false,
+        "slidesToScroll": 1
+      }
+    }
+  ]
+}
+{% endcapture %}
+{% capture slider_config_main %}
+{
+  "dots": false,
+  "arrows": true,
+  "speed": 400,
+  "slidesToShow": 1,
+  "slidesToScroll": 1,
+  "autoplay": false,
+  "infinite": false,
+  "cssEase": "linear",
+  "asNavFor": ".el-slider-product-media-thumb",
+  "prevArrow": ".el-slider-prev-{{ block.id }}",
+  "nextArrow": ".el-slider-next-{{ block.id }}",
+  "responsive": [
+    {
+      "breakpoint": 915,
+      "settings": {
+        "slidesToShow": 1,
+        "slidesToScroll": 1
+      }
+    }
+  ]
+}
+{% endcapture %}
+<div class="el-element el-element-product-media el-rative {{ block.settings.custom_class }} el-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+    <div class="el-rative el-media-main-wrapper">
+<div class="el-slick-slider el-slider-product-media-main" data-slider-config='{{ slider_config_main | strip }}'>
+ {%- for block in section.blocks -%} 
+            {%- case block.type -%}  
+                {%- when 'product_image' -%} 
+                    {%  render 'el-product-image-main', block:block, counter_block:counter_block %} 
+            {%  endcase %}
+        {%  endfor %} 
+</div>
+<div class="el-slider-navigation">
+<button class="el-slider-prev-{{ block.id }} el-slider-button el-slider-prev"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+  <path d="M17.0723 9.52101C17.6162 9.52101 18.0571 9.96194 18.0571 10.5059C18.0571 11.0498 17.6162 11.4907 17.0723 11.4907V10.5059V9.52101ZM4.5577 11.2023C4.1731 10.8176 4.1731 10.1941 4.5577 9.80947L10.8252 3.54194C11.2098 3.15733 11.8334 3.15733 12.218 3.54194C12.6026 3.92654 12.6026 4.55011 12.218 4.93472L6.64688 10.5059L12.218 16.077C12.6026 16.4616 12.6026 17.0852 12.218 17.4698C11.8334 17.8544 11.2098 17.8544 10.8252 17.4698L4.5577 11.2023ZM17.0723 10.5059V11.4907H5.2541V10.5059V9.52101H17.0723V10.5059Z" fill="#162036"/>
+</svg></button>
+<button class="el-slider-next-{{ block.id }} el-slider-button el-slider-next"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+  <path d="M4.1059 11.6572C3.56198 11.6572 3.12105 11.2162 3.12105 10.6723C3.12105 10.1284 3.56198 9.68746 4.1059 9.68746L4.1059 10.6723L4.1059 11.6572ZM16.6205 9.97591C17.0051 10.3605 17.0051 10.9841 16.6205 11.3687L10.3529 17.6362C9.96832 18.0208 9.34475 18.0208 8.96014 17.6362C8.57553 17.2516 8.57553 16.628 8.96014 16.2434L14.5313 10.6723L8.96014 5.10116C8.57553 4.71656 8.57553 4.09299 8.96014 3.70838C9.34475 3.32377 9.96832 3.32377 10.3529 3.70838L16.6205 9.97591ZM4.1059 10.6723L4.1059 9.68746L15.9241 9.68746L15.9241 10.6723L15.9241 11.6572L4.1059 11.6572L4.1059 10.6723Z" fill="#162036"/>
+</svg></button>
+</div>
+
+</div>
+<div class="el-slick-slider el-slider-product-media-thumb" data-slider-config='{{ slider_config_thumb | strip }}'>
+ {%- for block in section.blocks -%} 
+            {%- case block.type -%}  
+                {%- when 'product_image' -%} 
+                    {%  render 'el-product-image-thumb', block:block, counter_block:counter_block %} 
+            {%  endcase %}
+        {%  endfor %} 
+</div>
+
+</div>

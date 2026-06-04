@@ -1,0 +1,32 @@
+{% assign threshold = block.settings.threshold | times: 100 %}
+{%  for item in cart.items %}
+  {% if item.selling_plan_allocation %}
+    {% assign threshold = 0 | plus: 0 %}
+  {%  endif %}
+{%  endfor %}
+{% assign cart_total = cart.total_price %}
+{% assign remaining = threshold | minus: cart_total %}
+
+<div class="el-element el-element-free-shipping-main {{ block.settings.custom_class }} el-element-{{ block.id }}"
+{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<div class="el-element-free-shipping el-font-{{ block.settings.font_type }}">
+  <div class="elfree-ship-bar-top">
+    <div class="el-free-ship-filled-bar" style="width:{{ cart_total | times: 100 | divided_by: threshold }}%;max-width:100%;">
+    </div>
+  </div> 
+  <div class="elfree-ship-bar">
+      {% if remaining > 0 %}
+        <span class="locked_text">
+            {% assign remaining_money = remaining | money %}
+{{ block.settings.locked_text | replace: '[price]', remaining_money }}
+        </span>
+      {% else %}
+        <span class="unlocked_text">
+          {{ block.settings.ulocked_text }}
+        </span>
+      {% endif %}
+  </div> 
+
+
+</div>
+</div>

@@ -1,0 +1,12 @@
+{%  if block.settings.image != blank %}
+<div class="el-element-image-{{ block.id }} el-media el-product-media-thumb-item">
+  <div class="el-media">
+ {{ block.settings.image | image_url: width: 200 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '375, 550, 750, 800'
+}} 
+</div>
+</div>
+{% endif %}

@@ -1,0 +1,57 @@
+ <div class="el-element el-element-faq {{ block.settings.custom_class }} el-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<div class="el-faq-main">
+<button class="el-element-question-{{ block.id }} el-question el-font-{{ block.settings.font_type }}"><span>{{ block.settings.question }}</span></button>
+<div class="el-element-answer-{{ block.id }} el-answer el-font-{{ block.settings.font_type_answer }}" style="display:none;">{{ block.settings.answer }}
+{%  if block.settings.image != blank %}
+<div class="el-element-image">
+{% if block.settings.image_mobile != blank %}
+  <div class="el-media el-hide-mobile">
+    {%  if block.settings.high_resolution == true %}
+ {{ block.settings.image | image_url: width: 1800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '1800'
+}}   
+    {%  else %}
+ {{ block.settings.image | image_url: width: 800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '375, 550, 750, 800'
+}}   
+    {%  endif %}
+</div>
+  <div class="el-media el-hide-desktop">
+ {{ block.settings.image_mobile | image_url: width: 800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image_mobile.alt,
+  widths: '375, 550, 750, 800'
+}}   
+</div>
+{% else %}
+  <div class="el-media">
+    {%  if block.settings.high_resolution == true %}
+ {{ block.settings.image | image_url: width: 1800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '1800'
+}} 
+    {%  else %}
+ {{ block.settings.image | image_url: width: 800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '375, 550, 750, 800'
+}} 
+    {%  endif %}
+</div>
+{%  endif %}
+</div>
+{% endif %}
+
+</div>
+</div>
+</div>
