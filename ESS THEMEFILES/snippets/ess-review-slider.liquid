@@ -1,0 +1,49 @@
+{%  assign counter_block = block %}
+{% capture slider_config %}
+{
+  "dots": true,
+  "arrows": true,
+  "speed": 400,
+  "slidesToShow": {{ block.settings.columns_desktop }},
+  "slidesToScroll": 1,
+  "autoplay": false,
+  "infinite": true,
+  "cssEase": "linear",
+  "prevArrow": ".ess-slider-prev-{{ block.id }}",
+  "nextArrow": ".ess-slider-next-{{ block.id }}",
+  "appendDots": ".ess-slider-dots-{{ block.id }}",
+  "responsive": [
+    {
+      "breakpoint": 915,
+      "settings": {
+        "slidesToShow": {{ block.settings.columns_mobile }},
+        "slidesToScroll": 1,
+      "infinite": true
+      }
+    }
+  ]
+}
+{% endcapture %} 
+<div class="ess-element ess-element-slider-main {{ block.settings.custom_class }} ess-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<div class="ess-slick-slider" data-slider-config='{{ slider_config | strip }}'>
+ {%- for block in section.blocks -%} 
+            {%- case block.type -%}  
+                {%- when 'review_slide' -%} 
+                    {%  render 'ess-review-slide', block:block, counter_block:counter_block %} 
+            {%  endcase %}
+        {%  endfor %} 
+</div>
+<div class="ess-slider-navigation">
+<button class="ess-slider-prev-{{  block.id }} ess-slider-button ess-slider-prev"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <circle cx="24" cy="24" r="24" transform="matrix(-1 0 0 1 48 0)" fill="#FDFCF8"/>
+  <path d="M34 23C34.5523 23 35 23.4477 35 24C35 24.5523 34.5523 25 34 25V24V23ZM13.2929 24.7071C12.9024 24.3166 12.9024 23.6834 13.2929 23.2929L19.6569 16.9289C20.0474 16.5384 20.6805 16.5384 21.0711 16.9289C21.4616 17.3195 21.4616 17.9526 21.0711 18.3431L15.4142 24L21.0711 29.6569C21.4616 30.0474 21.4616 30.6805 21.0711 31.0711C20.6805 31.4616 20.0474 31.4616 19.6569 31.0711L13.2929 24.7071ZM34 24V25H14V24V23H34V24Z" fill="#0C3F10"/>
+</svg></button>
+<div class="ess-slider-dots-{{  block.id }} ess-slider-dots">
+
+</div>
+<button class="ess-slider-next-{{  block.id }} ess-slider-button ess-slider-next"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <circle cx="24" cy="24" r="24" fill="#FDFCF8"/>
+  <path d="M14 23C13.4477 23 13 23.4477 13 24C13 24.5523 13.4477 25 14 25V24V23ZM34.7071 24.7071C35.0976 24.3166 35.0976 23.6834 34.7071 23.2929L28.3431 16.9289C27.9526 16.5384 27.3195 16.5384 26.9289 16.9289C26.5384 17.3195 26.5384 17.9526 26.9289 18.3431L32.5858 24L26.9289 29.6569C26.5384 30.0474 26.5384 30.6805 26.9289 31.0711C27.3195 31.4616 27.9526 31.4616 28.3431 31.0711L34.7071 24.7071ZM14 24V25H34V24V23H14V24Z" fill="#0C3F10"/>
+</svg></button>
+</div>
+</div>

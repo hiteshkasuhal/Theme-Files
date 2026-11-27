@@ -1,0 +1,22 @@
+{
+  "layout": "theme.ess-pdp",
+  "sections": {
+    "hk_richtext_6LVdPL": {
+      "type": "ess-richtext",
+      "name": "RichText",
+      "settings": {
+        "background_color": "#ffffff",
+        "text_color": "#000000",
+        "text_alignment": "center",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "text_alignment_mobile": "center",
+        "padding_top_mobile": 0,
+        "padding_bottom_mobile": 0,
+        "custom_id": "",
+        "custom_class": ""
+      }
+    }
+  },
+  "order": ["hk_richtext_6LVdPL"]
+}

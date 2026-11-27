@@ -1,0 +1,22 @@
+ <div class="ess-element ess-element-scroll-item-main {{ block.settings.custom_class }} ess-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<div class="ess-scroll-item-flex">
+{%  if block.settings.image != blank %}
+<div class="ess-media">
+ {{ block.settings.image | image_url: width: 800 | image_tag:
+  loading: block.settings.image_loading,
+  fetchpriority: block.settings.image_performance,
+  alt:block.settings.image.alt,
+  widths: '375, 550, 750, 800'
+}} 
+</div>
+{%  endif %}
+{%  if block.settings.liquid != blank %}
+<div class="ess-media ess-svg">
+{{ block.settings.liquid }}
+</div>
+{% endif %}
+{%  if block.settings.text != blank %}
+<div class="ess-element-text ess-font-{{ block.settings.font_type }}">{{ block.settings.text }}</div>
+{% endif %}
+</div>
+</div>

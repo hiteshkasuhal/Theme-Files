@@ -1,0 +1,110 @@
+<!doctype html>
+<html class="js" lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="{{ settings.color_primary | default: '' }}">
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    {%- comment -%}
+      Performance notes on what changed in this head:
+
+      1. Removed the jQuery CDN <script> and the Slick CSS/JS CDN loads. They
+         were render-blocking, from two extra origins, and cost roughly 115KB
+         gzipped. Nothing needs them any more: see assets/ess-pdp.js.
+      2. Removed the X-UA-Compatible meta (IE only, ignored by every browser
+         Shopify supports).
+      3. Fonts now preconnect AND preload the stylesheet, with a swap fallback,
+         so text paints immediately in a fallback face instead of being
+         invisible during the font fetch.
+      4. Theme JS is deferred rather than async. Defer preserves execution
+         order (ess-bundle before ess-cart) and still never blocks parsing;
+         async would race them.
+    {%- endcomment -%}
+
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+      <link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180, height: 180 }}">
+    {%- endif -%}
+
+    {%- comment -%} Open Graph / Twitter, so shared links render properly. {%- endcomment -%}
+    <meta property="og:site_name" content="{{ shop.name }}">
+    <meta property="og:url" content="{{ canonical_url }}">
+    <meta property="og:title" content="{{ page_title | escape }}">
+    <meta property="og:type" content="{% if request.page_type == 'product' %}product{% else %}website{% endif %}">
+    {%- if page_description -%}
+      <meta property="og:description" content="{{ page_description | escape }}">
+    {%- endif -%}
+    {%- if product.featured_image -%}
+      <meta property="og:image" content="http:{{ product.featured_image | image_url: width: 1200 }}">
+      <meta property="og:image:width" content="1200">
+      <meta name="twitter:card" content="summary_large_image">
+    {%- endif -%}
+
+    {% render 'meta-tags' %}
+    {{ content_for_header }}
+
+    <script>
+      if (Shopify.designMode) {
+        document.documentElement.classList.add('shopify-design-mode');
+      }
+    </script>
+
+    {%- comment -%}
+      Fonts. display=swap is the important bit: without it the browser hides
+      text for up to 3s while the font downloads, which shows up as a bad LCP
+      and a flash of invisible text.
+    {%- endcomment -%}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+    >
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+      media="print"
+      onload="this.media='all'"
+    >
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap">
+    </noscript>
+
+    {{ 'ess-pdp.css' | asset_url | stylesheet_tag: preload: true }}
+
+    <script src="{{ 'ess-bundle.js' | asset_url }}" defer></script>
+    <script src="{{ 'ess-cart.js' | asset_url }}" defer></script>
+    <script src="{{ 'ess-pdp.js' | asset_url }}" defer></script>
+
+    {%- if request.design_mode -%}
+      <style>
+        body { zoom: unset !important; }
+      </style>
+    {%- endif -%}
+  </head>
+
+  <body class="ess-global-body">
+    <a class="ess-skip-link" href="#MainContent">Skip to content</a>
+
+    {% sections 'ess-header-group' %}
+
+    <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
+      <!--LayoutHub-Workspace-Start-->{{ content_for_layout }}<!--LayoutHub-Workspace-End-->
+    </main>
+
+    {% sections 'ess-footer-group' %}
+  </body>
+</html>

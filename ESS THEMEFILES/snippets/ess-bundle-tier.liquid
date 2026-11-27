@@ -1,0 +1,310 @@
+{%- comment -%}
+  ess-bundle-tier
+  ---------------
+  Renders ONE selectable bundle tier (a "quantity break").
+
+  Fully dynamic: nothing about quantity, price, copy, badges or selling plans is
+  hardcoded. Every value is derived from real Shopify variant data so the price
+  shown on the card can never disagree with the price charged at checkout.
+
+  Accepts:
+    block      - the bundle_tier block
+    product    - the product object to price against
+    tier_index - 1-based position, used for the data-tier handle
+
+  Tier modes (block.settings.tier_mode):
+    variant  - tier maps to one real variant (e.g. a "3-pack" variant).
+               Price is that variant's price. Checkout always matches.
+    quantity - tier is N x the base variant. Price is base price x N.
+               Needs a Shopify automatic discount / Function to actually
+               discount at checkout, otherwise it is straight multiplication.
+{%- endcomment -%}
+
+{%- liquid
+  assign tier_mode = block.settings.tier_mode | default: 'quantity'
+  assign qty = block.settings.quantity | default: 1
+  if qty < 1
+    assign qty = 1
+  endif
+
+  # ---------------------------------------------------------------- variant
+  # Resolve the variant this tier buys.
+  #
+  # Shopify has no "variant picker" schema setting, so the merchant identifies
+  # the variant one of two ways:
+  #   variant_id    - exact id. Precise, but store-specific.
+  #   variant_index - 1-based position in product.variants. Portable across
+  #                   stores, which is what makes this section reusable.
+  # Falls back to the selected/first available variant so a tier never renders
+  # an empty price on a store with a different variant layout.
+  assign tier_variant = blank
+
+  if tier_mode == 'variant'
+    assign wanted_id = block.settings.variant_id | strip
+
+    if wanted_id != blank
+      for v in product.variants
+        assign vid_str = v.id | append: ''
+        if vid_str == wanted_id
+          assign tier_variant = v
+          break
+        endif
+      endfor
+    endif
+
+    if tier_variant == blank and block.settings.variant_index > 0
+      assign vi = block.settings.variant_index | minus: 1
+      assign tier_variant = product.variants[vi]
+    endif
+  endif
+
+  if tier_variant == blank
+    assign tier_variant = product.selected_or_first_available_variant
+  endif
+
+  # ------------------------------------------------------------ unit counts
+  # How many physical units the customer receives. In variant mode the variant
+  # IS the multipack, so units come from the setting (for per-unit maths only).
+  assign units = block.settings.units_received | default: qty
+  if units < 1
+    assign units = 1
+  endif
+
+  # ----------------------------------------------------------- one-time price
+  if tier_mode == 'variant'
+    assign line_price = tier_variant.price
+    assign cart_quantity = 1
+  else
+    assign line_price = tier_variant.price | times: qty
+    assign cart_quantity = qty
+  endif
+
+  # ------------------------------------------------- compare-at / strike price
+  # Priority: explicit override > variant compare_at x qty > base price x units.
+  # Never invent a fake "was" price: if there is nothing real to compare
+  # against, compare_price stays equal to line_price and no strike renders.
+  assign compare_price = line_price
+
+  if block.settings.compare_at_override > 0
+    assign compare_price = block.settings.compare_at_override | times: 100
+  elsif tier_variant.compare_at_price > tier_variant.price
+    if tier_mode == 'variant'
+      assign compare_price = tier_variant.compare_at_price
+    else
+      assign compare_price = tier_variant.compare_at_price | times: qty
+    endif
+  elsif tier_mode == 'variant' and units > 1
+    assign base = product.selected_or_first_available_variant.price | times: units
+    if base > line_price
+      assign compare_price = base
+    endif
+  endif
+
+  # ------------------------------------------------------------ selling plan
+  # Resolve the subscription allocation for this variant. Uses the merchant's
+  # chosen selling plan group when set, else the first available allocation.
+  assign plan_alloc = blank
+  assign wanted_group = block.settings.selling_plan_group | strip
+
+  if wanted_group != blank
+    for alloc in tier_variant.selling_plan_allocations
+      if alloc.selling_plan_group_id == wanted_group
+        assign plan_alloc = alloc
+        break
+      endif
+    endfor
+    if plan_alloc == blank
+      for alloc in tier_variant.selling_plan_allocations
+        if alloc.selling_plan.name contains wanted_group
+          assign plan_alloc = alloc
+          break
+        endif
+      endfor
+    endif
+  endif
+
+  if plan_alloc == blank
+    assign plan_alloc = tier_variant.selling_plan_allocations.first
+  endif
+
+  assign has_sub = false
+  if plan_alloc != blank and plan_alloc.selling_plan.id != blank
+    assign has_sub = true
+  endif
+
+  if has_sub
+    if tier_mode == 'variant'
+      assign sub_price = plan_alloc.per_delivery_price
+    else
+      assign sub_price = plan_alloc.per_delivery_price | times: qty
+    endif
+  else
+    assign sub_price = line_price
+  endif
+
+  # ----------------------------------------------------------------- savings
+  # Guard every division: a store with no compare_at price must not 500.
+  assign save_pct = 0
+  assign save_amount = 0
+  if compare_price > line_price and compare_price > 0
+    assign save_amount = compare_price | minus: line_price
+    assign save_pct = save_amount | times: 100 | divided_by: compare_price
+  endif
+
+  assign save_pct_sub = 0
+  assign save_amount_sub = 0
+  if compare_price > sub_price and compare_price > 0
+    assign save_amount_sub = compare_price | minus: sub_price
+    assign save_pct_sub = save_amount_sub | times: 100 | divided_by: compare_price
+  endif
+
+  assign unit_price = line_price | divided_by: units
+  assign unit_price_sub = sub_price | divided_by: units
+
+  # -------------------------------------------------------------- availability
+  assign sold_out = false
+  unless tier_variant.available
+    assign sold_out = true
+  endunless
+
+  # ------------------------------------------------------------------- labels
+  # Fall back to a sensible generated label so a tier is never blank.
+  assign tier_label = block.settings.title | strip
+  if tier_label == blank
+    if units > 1
+      assign tier_label = units | append: ' × ' | append: product.title
+    else
+      assign tier_label = product.title
+    endif
+  endif
+
+  assign unit_noun = block.settings.unit_noun | default: 'unit' | strip
+-%}
+
+<button
+  type="button"
+  class="ess-bundle-tier ess-font-body{% if block.settings.preselected %} is-selected{% endif %}{% if sold_out %} is-sold-out{% endif %}{% if block.settings.highlight %} is-highlighted{% endif %} {{ block.settings.custom_class }}"
+  {% if block.settings.custom_id != blank %}id="{{ block.settings.custom_id }}"{% endif %}
+  role="radio"
+  aria-checked="{% if block.settings.preselected %}true{% else %}false{% endif %}"
+  {% if sold_out %}aria-disabled="true" disabled{% endif %}
+  data-tier="{{ tier_index }}"
+  data-block-id="{{ block.id }}"
+  data-variant-id="{{ tier_variant.id }}"
+  data-quantity="{{ cart_quantity }}"
+  data-units="{{ units }}"
+  data-mode="{{ tier_mode }}"
+  {% if has_sub %}data-selling-plan="{{ plan_alloc.selling_plan.id }}"{% endif %}
+  data-price-onetime="{{ line_price }}"
+  data-price-subscription="{{ sub_price }}"
+  data-compare-price="{{ compare_price }}"
+>
+  {%- if block.settings.badge != blank -%}
+    <span class="ess-bundle-tier__badge">{{ block.settings.badge }}</span>
+  {%- endif -%}
+
+  <span class="ess-bundle-tier__row">
+    <span class="ess-bundle-tier__radio" aria-hidden="true"></span>
+
+    <span class="ess-bundle-tier__info">
+      <span class="ess-bundle-tier__title">{{ tier_label }}</span>
+
+      {%- if block.settings.subtitle != blank -%}
+        <span class="ess-bundle-tier__subtitle">{{ block.settings.subtitle }}</span>
+      {%- endif -%}
+
+      {%- comment -%} Per-unit price: the number that makes a bundle feel cheap. {%- endcomment -%}
+      {%- if block.settings.show_unit_price and units > 1 -%}
+        <span class="ess-bundle-tier__unit">
+          <span class="ess-price-mode" data-price-mode="onetime">{{ unit_price | money }}</span>
+          {%- if has_sub -%}
+            <span class="ess-price-mode" data-price-mode="subscription" hidden>{{ unit_price_sub | money }}</span>
+          {%- endif -%}
+          <span class="ess-bundle-tier__unit-noun">/&nbsp;{{ unit_noun }}</span>
+        </span>
+      {%- endif -%}
+    </span>
+
+    <span class="ess-bundle-tier__pricing">
+      <span class="ess-bundle-tier__price">
+        <span class="ess-price-mode" data-price-mode="onetime">{{ line_price | money }}</span>
+        {%- if has_sub -%}
+          <span class="ess-price-mode" data-price-mode="subscription" hidden>{{ sub_price | money }}</span>
+        {%- endif -%}
+      </span>
+
+      {%- if compare_price > line_price -%}
+        <s class="ess-bundle-tier__compare">{{ compare_price | money }}</s>
+      {%- endif -%}
+
+      {%- if block.settings.show_savings -%}
+        {%- if save_pct > 0 or save_pct_sub > 0 -%}
+          <span class="ess-bundle-tier__save">
+            <span class="ess-price-mode" data-price-mode="onetime">
+              {%- if block.settings.savings_style == 'amount' -%}
+                {{ 'Save' }} {{ save_amount | money }}
+              {%- else -%}
+                {{ save_pct }}% off
+              {%- endif -%}
+            </span>
+            {%- if has_sub -%}
+              <span class="ess-price-mode" data-price-mode="subscription" hidden>
+                {%- if block.settings.savings_style == 'amount' -%}
+                  {{ 'Save' }} {{ save_amount_sub | money }}
+                {%- else -%}
+                  {{ save_pct_sub }}% off
+                {%- endif -%}
+              </span>
+            {%- endif -%}
+          </span>
+        {%- endif -%}
+      {%- endif -%}
+    </span>
+  </span>
+
+  {%- if sold_out -%}
+    <span class="ess-bundle-tier__soldout">{{ block.settings.sold_out_text | default: 'Sold out' }}</span>
+  {%- endif -%}
+
+  {%- comment -%}
+    Per-item pickers. Only rendered when the merchant turns them on AND the
+    tier buys more than one unit. Options come from a collection when one is
+    set, otherwise from the product's own variants — this is what makes the
+    section work on a store with any variant layout.
+  {%- endcomment -%}
+  {%- if block.settings.show_item_pickers and units > 1 -%}
+    {%- liquid
+      assign picker_source = block.settings.picker_collection.products
+      assign use_variants = false
+      if picker_source == blank or picker_source.size == 0
+        assign use_variants = true
+      endif
+    -%}
+    <span class="ess-bundle-tier__items" data-tier-items>
+      {%- for n in (1..units) -%}
+        <span class="ess-bundle-tier__item" data-item-index="{{ n }}">
+          <span class="ess-bundle-tier__item-no">{{ n }}</span>
+          <select
+            class="ess-bundle-tier__select"
+            data-item-select
+            aria-label="{{ block.settings.picker_label | default: 'Choose option' }} {{ n }}"
+          >
+            {%- if use_variants -%}
+              {%- for v in product.variants -%}
+                {%- if v.available -%}
+                  <option value="{{ v.id }}">{{ v.title }}</option>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- else -%}
+              {%- for p in picker_source -%}
+                {%- if p.available -%}
+                  <option value="{{ p.selected_or_first_available_variant.id }}">{{ p.title }}</option>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+          </select>
+        </span>
+      {%- endfor -%}
+    </span>
+  {%- endif -%}
+</button>

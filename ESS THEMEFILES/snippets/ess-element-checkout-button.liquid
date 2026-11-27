@@ -1,0 +1,80 @@
+{%- comment -%}
+  ess-element-checkout-button  (Checkout Button)
+  ----------------------------------------------
+  Add-to-cart / checkout button.
+
+  Rewritten because the previous version:
+    - embedded a full <script> block per button, so the same jQuery handlers
+      and the same two helper functions were redefined once per instance
+    - hardcoded the shipping protection variant ID (53900035981639) twice
+    - sent quantity: 1 regardless of the bundle the customer selected
+    - read prices by looping `variant` blocks, so it only worked on a store
+      laid out with those blocks
+
+  Now: no inline script, no store-specific IDs, and the label price tracks the
+  live bundle selection. Behaviour lives in assets/ess-cart.js.
+
+  The [price] token in the button label is replaced with the live price.
+{%- endcomment -%}
+
+{%- liquid
+  assign target_product = product
+  if section.settings.product != blank
+    assign target_product = section.settings.product
+  endif
+
+  assign fv = target_product.selected_or_first_available_variant
+  assign base_price = fv.price
+  assign base_compare = fv.compare_at_price
+
+  assign sub_alloc = fv.selling_plan_allocations.first
+  assign has_sub = false
+  if sub_alloc != blank and sub_alloc.selling_plan.id != blank
+    assign has_sub = true
+  endif
+-%}
+
+{%- capture price_markup -%}
+  <span class="ess-button__price" data-ess-price>
+    <span data-ess-price-current>{{ base_price | money }}</span>
+    {%- if base_compare > base_price -%}
+      <s data-ess-price-compare>{{ base_compare | money }}</s>
+    {%- else -%}
+      <s data-ess-price-compare hidden></s>
+    {%- endif -%}
+  </span>
+{%- endcapture -%}
+
+<div
+  class="ess-element ess-element-button {{ block.settings.custom_class }} ess-element-{{ block.id }}"
+  {% if block.settings.custom_id != blank %}id="{{ block.settings.custom_id }}"{% endif %}
+>
+  <div class="ess-element-button-{{ block.id }} ess-font-{{ block.settings.font_type }}">
+    <button
+      type="button"
+      class="ess-button ess-checkout-button ess-font-body{% unless fv.available %} ess-sold-out{% endunless %}"
+      data-ess-atc
+      data-variant-id="{{ fv.id }}"
+      data-quantity="1"
+      {% if has_sub %}data-selling-plan="{{ sub_alloc.selling_plan.id }}"{% endif %}
+      {% if block.settings.add_gift %}data-add-gift="true"{% endif %}
+      {% unless fv.available %}disabled aria-disabled="true"{% endunless %}
+    >
+      {%- if fv.available -%}
+        {{ block.settings.button_label | replace: '[price]', price_markup }}
+        {%- unless block.settings.button_label contains '[price]' -%}
+          {{ price_markup }}
+        {%- endunless -%}
+      {%- else -%}
+        {{ block.settings.sold_out_label | default: 'Sold out' }}
+      {%- endif -%}
+    </button>
+
+    {%- comment -%} Cart errors surface here instead of failing silently. {%- endcomment -%}
+    <p class="ess-cart-error" data-cart-error hidden role="alert"></p>
+
+    {%- if block.settings.subtext != blank -%}
+      <div class="ess-button__subtext">{{ block.settings.subtext }}</div>
+    {%- endif -%}
+  </div>
+</div>

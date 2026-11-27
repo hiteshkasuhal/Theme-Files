@@ -1,0 +1,1257 @@
+/* start common css */
+body {
+    display: block;
+}
+@media (max-width:915px) {
+  .ess-hide-mobile {
+    display:none !important;
+  }
+}
+@media (min-width:915px) {
+  .ess-hide-desktop {
+    display:none !important;
+  }
+}
+.ess-slider-main:not(.slick-initialized) {
+  display:flex;
+}
+html {
+    scroll-behavior: smooth;
+}
+p {
+    margin: unset;
+    padding: unset;
+}
+* {
+    color: unset;
+    letter-spacing: unset;
+    margin: unset;
+    padding: unset;
+}
+h1, h2, h3, h4, h5, .h0, .h1, .h2, .h3, .h4, .h5 {
+    color: unset;
+    letter-spacing: unset;
+    margin: unset;
+    padding: unset;
+}
+.ess-text-left-desktop {
+    text-align: left;
+    justify-content: left;
+}
+.ess-text-center-desktop {
+    text-align: center;
+    justify-content: center;
+}
+.ess-text-right-desktop {
+    text-align: right;
+    justify-content: right;
+}
+img, video {
+    max-width: 100%;
+    display: block;
+    height: auto;
+}
+
+.ess-no_buttons .slick-arrow {
+    display: none !important;
+}
+
+.ess-same-height-slider .slick-slide {
+    height: inherit !important;
+}
+.ess-same-height-slider .slick-track {
+    display: flex;
+}
+.ess-loading:after {
+    content: "";
+    width: 100% !important;
+    height: 100% !important;
+    background: url( https://cdn.shopify.com/s/files/1/0789/0570/4766/files/loading.gif?v=1736941696 ) !important;
+    background-size: 25px !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    z-index: 1 !important;
+    display: block !important;
+}
+.ess-loading {
+    color: transparent !important;
+    position: relative !important;
+}
+.ess-checkout-button.ess-loading *, 
+.ess-atc-js.ess-loading * {
+    opacity: 0;
+}
+
+
+.ess-loading-cart:after {
+    content: "";
+    width: 100% !important;
+    height: 100% !important;
+    background: url( https://cdn.shopify.com/s/files/1/0789/0570/4766/files/loading.gif?v=1736941696 ) !important;
+    background-size: 50px !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    z-index: 1 !important;
+    background-color: #0000003b !important;
+    display: block !important;
+}
+.ess-loading-cart {
+    position: relative;
+}
+svg, img, video {
+    display: inline-block;
+}
+* {
+    box-sizing: border-box;
+}
+.ess-video-wrapper.ess-active img, 
+.ess-video-wrapper.ess-active .ess-play-button {
+    display: none;
+}
+.ess-relative {
+    position: relative;
+}
+.ess-container {
+    max-width:100%;
+    width:var(--ess-container-width);
+    padding-left:50px;
+    padding-right:50px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+body, .ess-font-body  {
+  font-family:var(--ess-body-font);
+}
+.ess-font-heading{
+  font-family: var(--ess-heading-font);
+}
+
+.shopify-section.header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9;
+}
+img {
+    height; unset;
+}
+
+.ess-checkout-button:has(.ess-sold-out.ess-active) {
+    pointer-events: none;
+    opacity: .7;
+}
+
+@media (max-width:915px) {
+.ess-text-left-mobile {
+    text-align: left;
+    justify-content: left;
+}
+.ess-text-center-mobile {
+    text-align: center;
+    justify-content: center;
+}
+.ess-text-right-mobilep {
+    text-align: right;
+    justify-content: right;
+}
+.ess-container {
+    padding-left:16px;
+    padding-right:16px;
+}
+}
+/* end common css */
+
+
+
+/* font family start */
+@font-face {
+  font-family: "Aeonik";
+  src: url('https://cdn.shopify.com/s/files/1/0907/4953/4535/files/Aeonik-Light.woff?v=1779117818');
+  font-style: normal;
+  font-weight: 300;
+  font-display:swap;
+}
+@font-face {
+  font-family: "Aeonik";
+  src: url('https://cdn.shopify.com/s/files/1/0907/4953/4535/files/Aeonik-LightItalic.woff?v=1779117818');
+  font-style: italic;
+  font-weight: 300;
+  font-display:swap;
+}
+@font-face {
+  font-family: "Aeonik";
+  src: url('https://cdn.shopify.com/s/files/1/0907/4953/4535/files/Aeonik-Regular.woff?v=1779117818');
+  font-style: normal;
+  font-weight: 400;
+  font-display:swap;
+}
+@font-face {
+  font-family: "Aeonik";
+  src: url('https://cdn.shopify.com/s/files/1/0907/4953/4535/files/Aeonik-RegularItalic.woff?v=1779117818');
+  font-style: italic;
+  font-weight: 400;
+  font-display:swap;
+}
+@font-face {
+  font-family: "Aeonik";
+  src: url('https://cdn.shopify.com/s/files/1/0907/4953/4535/files/Aeonik-Medium_d19a2295-a8e4-4088-b3b0-630e965b6095.woff?v=1779117818');
+  font-style: normal;
+  font-weight: 500;
+  font-display:swap;
+}
+@font-face {
+  font-family: "Aeonik";
+  src: url('https://cdn.shopify.com/s/files/1/0907/4953/4535/files/Aeonik-MediumItalic_851e1c05-f818-4422-975f-fe9a55215f09.woff?v=1779117818');
+  font-style: italic;
+  font-weight: 500;
+  font-display:swap;
+}
+@font-face {
+  font-family: "Aeonik";
+  src: url('https://cdn.shopify.com/s/files/1/0907/4953/4535/files/Aeonik-Bold.woff?v=1779117818');
+  font-style: normal;
+  font-weight: 700;
+  font-display:swap;
+}
+@font-face {
+  font-family: "Aeonik";
+  src: url('https://cdn.shopify.com/s/files/1/0907/4953/4535/files/Aeonik-BoldItalic.woff?v=1779117818');
+  font-style: italic;
+  font-weight: 700;
+  font-display:swap;
+}
+/* font family end */
+
+
+
+body, p {
+  font-family: var(--ess-body-font);
+}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: var(--ess-heading-font) !important;
+}
+
+
+
+/* same css start */
+.ess-image-with-text-flex {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: self-start;
+}
+.ess-image-with-text-column {
+    width: 50%;
+}
+.ess-media, 
+.ess-svg {
+    display: flex;
+}
+.ess-global-heading h1 {
+    max-width: 100%;
+    font-size: 70px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+    letter-spacing: -2.1px;
+    width: 100%;
+}
+.ess-button {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 1298.7px;
+    background: #72D3FF;
+    text-decoration: none;
+    width: 550px;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    color: #162036;
+    font-size: 20.8px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.208px;
+    text-transform: capitalize;
+    border: 2px solid #72D3FF;
+    gap: 10.4px;
+}
+.ess-button:hover {
+    background: transparent;
+    color: #72D3FF;
+}
+.ess-button:after {
+    content: "";
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 25px;
+    height: 25px;
+    background-image: url("https://cdn.shopify.com/s/files/1/0907/4953/4535/files/HP-btn-svg.webp");
+}
+.ess-global-MBG .ess-icon-with-text-flex {
+    width: 550px;
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFF;
+    font-size: 15.6px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin-top: 13px;
+    gap: 7.8px;
+}
+.ess-global-MBG .ess-icon-with-text-flex img {
+    width: 20.353px;
+    height: unset;
+}
+.ess-global-rating .ess-icon-with-text-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0, 0, 0, 0.80);
+    font-size: 15.6px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    gap: 6.5px;
+    padding-bottom: 16px;
+}
+.ess-global-rating .ess-icon-with-text-flex strong {
+    color: #000;
+    font-weight: 500;
+}
+.ess-global-rating .ess-icon-with-text-flex em {
+    color: #000;
+    font-style: normal;
+    text-decoration-line: underline;
+}
+.ess-global-heading h2 {
+    font-size: 60px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+    letter-spacing: -1.8px;
+}
+.ess-center {
+    width: fit-content;
+    margin: 0px auto;
+}
+.ess-btn-black .ess-button:hover {
+    color: #000;
+    border-color: #000;
+}
+.ess-MBG-white .ess-icon-with-text-flex {
+    color: #162036;
+}
+.relative {
+    position: relative;
+}
+.ess-slider-button {
+    background: transparent;
+    border: unset;
+    cursor: pointer;
+    position: absolute;
+    top: 46%;
+}
+.ess-slider-next {
+    right: -34px;
+}
+.ess-slider-prev {
+    left: -34px;
+}
+.slick-disabled {
+    opacity: 0.25;
+}
+.ess-scroll-bar-img img {
+    width: 195px;
+    height: unset;
+    margin: 0px 5px;
+}
+ul.slick-dots {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    width: 400px;
+    max-width: 100%;
+    margin: 0px auto;
+    padding-top: 30px;
+}
+ul.slick-dots li {
+    width: 100%;
+    font-size: 0px;
+}
+ul.slick-dots li button {
+    width: 100%;
+    font-size: 0px;
+    padding: 0px !important;
+    background: #000;
+    height: 2.6px;
+    border: none;
+    cursor: pointer;
+}
+ul.slick-dots li.slick-active~li button {
+    background: #00000040;
+}
+.ess-slider-dot-white ul.slick-dots li.slick-active~li button {
+    background: #FFFFFF40;
+}
+.ess-slider-dot-white ul.slick-dots li button {
+    background: #fff;
+}
+
+
+
+@media (max-width: 915px) {
+.ess-image-with-text-column {
+    width: 100%;
+}
+.ess-global-heading h1 {
+    max-width: 100%;
+    font-size: 46px;
+    font-style: normal;
+    letter-spacing: -1.38px;
+    width: 270px;
+    text-align: center;
+    margin: 0px auto;
+}
+.ess-center {
+    width: 100%;
+    margin: 0px auto;
+}
+.ess-button {
+    cursor: pointer;
+    width: calc(100% - 30px);
+    min-height: 55px;
+    font-size: 16px;
+    letter-spacing: -0.16px;
+    gap: 9px;
+    margin: 0px auto;
+}
+.ess-button:after {
+    width: 18px;
+    height: 18px;
+}
+.ess-global-MBG .ess-icon-with-text-flex {
+    width: 100%;
+    font-size: 12px;
+    margin-top: 10px;
+    gap: 5.5px;
+}
+.ess-global-MBG .ess-icon-with-text-flex img {
+    width: 15.656px;
+}
+.ess-global-heading h2 {
+    font-size: 40px;
+    letter-spacing: -1.2px;
+    width: 328px;
+    max-width: 100%;
+}
+.ess-global-rating .ess-icon-with-text-flex {
+    justify-content: unset;
+    font-size: 12px;
+    gap: 5px;
+    padding-bottom: 12px;
+}
+.ess-global-rating .ess-icon-with-text-flex svg {
+    width: 79px;
+    height: unset;
+}
+ul.slick-dots {
+    width: 199px;
+    padding-top: 25px;
+}
+ul.slick-dots li button {
+    height: 2px;
+}
+.ess-heading-center h2 {
+    margin: 0px auto;
+}
+}
+/* same css end */
+
+
+
+/* header css start */
+.ess-header-top-text1 {
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 125%;
+}
+.ess-header-top-text1 strong {
+    color: #72D3FF;
+    font-weight: unset;
+}
+.ess-header-top {
+    background: linear-gradient(90deg, #344569 0%, #5D87DF 100%);
+}
+
+
+
+@media (max-width: 915px) {
+.ess-header-top-text1 {
+    font-size: 13px;
+}
+}
+/* header css end */
+
+
+
+
+
+/* zoom */
+@media (max-width: 1600px) and (min-width: 1400px) {
+body {
+    zoom: 90%;
+}
+}
+ 
+ 
+@media (max-width: 1400px) and (min-width: 1100px) {
+body {
+    zoom: 80%;
+}
+}
+ 
+ 
+@media (max-width: 1100px) and (min-width: 915px) {
+body {
+    zoom: 65%;
+}
+}
+
+
+
+
+
+
+/* header css*/
+
+
+/* header section css start */
+.shopify-section.header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9;
+}
+.ess-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.ess-header-logo {
+    width: 71.5px;
+    max-width: 100%;
+}
+.ess-header-logo img {
+    width: 100%;
+    height: auto;
+}
+.ess-mobile-menu-button, 
+.ess-cart-button {
+    background: transparent;
+    padding: 0;
+    border: unset;
+    box-shadow: unset;
+    cursor: pointer;
+}
+.ess-element-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 500px;
+    max-width: 100%;
+    height: 100%;
+    z-index: 11;
+    transition: all .5s ease;
+}
+.ess-drawer-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: .5;
+    cursor: pointer;
+    z-index: 10;
+}
+.ess-drawer-menu {
+    padding-right: 20px;
+}
+.ess-drawer-menu-inner {
+    position: relative;
+    background: #fff;
+    width: 100%;
+    max-width: 100%;
+    color: #1c1c1c;
+    height: 100%;
+    padding: 30px 30px;
+}
+button.ess-mobile-menu-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: unset;
+    box-shadow: unset;
+    cursor: pointer;
+}
+.ess-drawer-menu-content {
+    height: 100%;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+.ess-drawer-menu-content .ess-element-menu-main {
+    flex: 1;
+}
+.ess-drawer-menu-content a {
+    width: 100%;
+    display: block;
+    text-decoration: unset;
+    font-size: 18px;
+    padding: 12px 0;
+}
+.ess-drawer-menu {
+    left: -100%;
+}
+.ess-drawer-menu.ess-active {
+    left: 0;
+}
+.ess-header, 
+.ess-annoucement-bar {
+    position: relative;
+    z-index: 1;
+}
+.ess-header {
+    transition: all .3s ease;
+}   
+
+
+/* desktop css */
+@media (min-width:915px) {
+}
+
+
+
+/* mobile css */
+@media (max-width:915px) {
+.ess-drawer-menu-content a {
+    font-size: 15px;
+    padding: 8px 0;
+}
+.ess-drawer-menu-inner {
+    padding: 30px 20px;
+}
+.ess-element-annoucement-main {
+    gap: 12px;
+    font-size: 14px;
+    letter-spacing: -0.28px;
+    justify-content: center;
+}
+span.ess-countdown-js {
+    gap: 6px;
+    font-size: 12px;
+    letter-spacing: -0.24px;
+}
+span.ess-countdown-js>span {
+    padding: 5px 5px 3px;
+}
+.ess-header-logo {
+    width: 55px;
+    max-width: 100%;
+}
+.ess-header-content svg {
+    height: 15px;
+    width: auto;
+}
+}
+/* header section css end */
+
+
+
+
+/* =========================================================================
+   Bundle selector, purchase toggle, quantity stepper, scroll-snap slider
+   -------------------------------------------------------------------------
+   Added alongside the new universal Buy Options block. Everything here is
+   driven by CSS custom properties so a store can restyle it from Page
+   Settings without touching this file.
+
+   The slider rules replace Slick's stylesheet (previously loaded from a CDN).
+   Legacy .slick-* rules above are left in place so any markup still carrying
+   those classes keeps its look.
+   ========================================================================= */
+
+:root {
+  --ess-tier-radius: 12px;
+  --ess-tier-border: #e3e3e3;
+  --ess-tier-border-selected: #1c1c1c;
+  --ess-tier-bg: #ffffff;
+  --ess-tier-bg-selected: #fafafa;
+  --ess-tier-gap: 10px;
+  --ess-accent: #caad58;
+  --ess-badge-bg: #1c1c1c;
+  --ess-badge-color: #ffffff;
+  --ess-muted: #6b6b6b;
+  --ess-save-bg: #e8f5e9;
+  --ess-save-color: #1b5e20;
+  --ess-focus: #005bd3;
+}
+
+/* ------------------------------------------------------------ skip link */
+
+.ess-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 10px 16px;
+  background: #fff;
+  color: #000;
+}
+.ess-skip-link:focus {
+  left: 0;
+}
+
+/* Visible focus for keyboard users. */
+.ess-bundle-tier:focus-visible,
+.ess-purchase-toggle__option:focus-visible,
+.ess-qty__btn:focus-visible,
+.ess-slider-dot:focus-visible {
+  outline: 2px solid var(--ess-focus);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------- purchase toggle */
+
+.ess-purchase-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ess-tier-gap);
+  margin-bottom: 14px;
+}
+
+.ess-purchase-toggle__option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--ess-tier-border);
+  border-radius: var(--ess-tier-radius);
+  background: var(--ess-tier-bg);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.ess-purchase-toggle__option.is-selected {
+  border-color: var(--ess-tier-border-selected);
+  background: var(--ess-tier-bg-selected);
+}
+
+.ess-purchase-toggle__radio {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--ess-tier-border-selected);
+  border-radius: 50%;
+  position: relative;
+}
+
+.ess-purchase-toggle__option.is-selected .ess-purchase-toggle__radio::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: var(--ess-tier-border-selected);
+}
+
+.ess-purchase-toggle__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ess-purchase-toggle__title {
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.ess-purchase-toggle__subtitle,
+.ess-bundle-tier__subtitle {
+  font-size: 0.8125rem;
+  color: var(--ess-muted);
+  line-height: 1.3;
+}
+
+.ess-purchase-toggle__badge {
+  margin-left: auto;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--ess-accent);
+  color: var(--ess-badge-color);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------------------- frequency */
+
+.ess-frequency {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.ess-frequency__label {
+  font-size: 0.875rem;
+  color: var(--ess-muted);
+}
+
+.ess-frequency__select,
+.ess-bundle-tier__select {
+  padding: 8px 10px;
+  border: 1px solid var(--ess-tier-border);
+  border-radius: 8px;
+  background: #fff;
+  font: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+/* -------------------------------------------------------- bundle tiers */
+
+.ess-bundle-tiers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ess-tier-gap);
+}
+
+.ess-bundle-tier {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--ess-tier-border);
+  border-radius: var(--ess-tier-radius);
+  background: var(--ess-tier-bg);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ess-bundle-tier.is-selected {
+  border-color: var(--ess-tier-border-selected);
+  background: var(--ess-tier-bg-selected);
+  box-shadow: 0 0 0 1px var(--ess-tier-border-selected) inset;
+}
+
+.ess-bundle-tier.is-highlighted {
+  border-color: var(--ess-accent);
+}
+
+.ess-bundle-tier.is-sold-out {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.ess-bundle-tier__badge {
+  position: absolute;
+  top: -10px;
+  left: 16px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--ess-badge-bg);
+  color: var(--ess-badge-color);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ess-bundle-tier.is-highlighted .ess-bundle-tier__badge {
+  background: var(--ess-accent);
+}
+
+.ess-bundle-tier__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ess-bundle-tier__radio {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--ess-tier-border-selected);
+  border-radius: 50%;
+  position: relative;
+}
+
+.ess-bundle-tier.is-selected .ess-bundle-tier__radio::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: var(--ess-tier-border-selected);
+}
+
+.ess-bundle-tier__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.ess-bundle-tier__title {
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.ess-bundle-tier__unit {
+  font-size: 0.8125rem;
+  color: var(--ess-muted);
+}
+
+.ess-bundle-tier__pricing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex: 0 0 auto;
+  text-align: right;
+}
+
+.ess-bundle-tier__price {
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.ess-bundle-tier__compare {
+  font-size: 0.8125rem;
+  color: var(--ess-muted);
+}
+
+.ess-bundle-tier__save {
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--ess-save-bg);
+  color: var(--ess-save-color);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ess-bundle-tier__soldout {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Per-item pickers: only visible once the tier is chosen, so the list
+   does not look like a wall of dropdowns. */
+.ess-bundle-tier__items {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--ess-tier-border);
+}
+
+.ess-bundle-tier.is-selected .ess-bundle-tier__items {
+  display: flex;
+}
+
+.ess-bundle-tier__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ess-bundle-tier__item-no {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #f0f0f0;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.ess-bundle-tier__select {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ess-element-options__footnote {
+  margin: 12px 0 0;
+  font-size: 0.75rem;
+  color: var(--ess-muted);
+  line-height: 1.4;
+}
+
+.ess-editor-hint {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border: 1px dashed var(--ess-accent);
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  color: var(--ess-muted);
+}
+
+/* ------------------------------------------------------ quantity stepper */
+
+.ess-qty {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.ess-qty__label {
+  font-size: 0.875rem;
+  color: var(--ess-muted);
+}
+
+.ess-qty__control {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--ess-tier-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.ess-qty__btn {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  font-size: 1.125rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ess-qty__btn:hover {
+  background: #f4f4f4;
+}
+
+.ess-qty__input {
+  width: 46px;
+  height: 38px;
+  border: 0;
+  border-left: 1px solid var(--ess-tier-border);
+  border-right: 1px solid var(--ess-tier-border);
+  text-align: center;
+  font: inherit;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.ess-qty__input::-webkit-outer-spin-button,
+.ess-qty__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* --------------------------------------------------------- cart feedback */
+
+.ess-cart-error {
+  margin: 8px 0 0;
+  color: #b00020;
+  font-size: 0.8125rem;
+}
+
+.ess-button[aria-busy="true"],
+.ess-button.ess-loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.ess-button__price {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.ess-button__subtext {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: var(--ess-muted);
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------- FAQ */
+
+/* Replaces jQuery slideToggle. grid-template-rows animates without
+   measuring heights in JS, so no layout thrash. */
+.ess-question + * {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+  overflow: hidden;
+}
+
+.ess-question + *.ess-open {
+  grid-template-rows: 1fr;
+}
+
+.ess-question + * > * {
+  min-height: 0;
+}
+
+/* ------------------------------------------------- scroll-snap slider */
+
+.ess-scroll-slider {
+  display: flex;
+  gap: var(--ess-slider-gap, 10px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior-x: contain;
+}
+
+.ess-scroll-slider::-webkit-scrollbar {
+  display: none;
+}
+
+.ess-scroll-slider > * {
+  flex: 0 0 calc((100% - (var(--ess-slides, 1) - 1) * var(--ess-slider-gap, 10px)) / var(--ess-slides, 1));
+  scroll-snap-align: start;
+  min-width: 0;
+}
+
+.ess-scroll-slider.is-vertical {
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  max-height: var(--ess-slider-height, 100%);
+}
+
+.ess-scroll-slider.is-vertical > * {
+  flex-basis: auto;
+}
+
+@media screen and (max-width: 915px) {
+  .ess-scroll-slider > * {
+    flex: 0 0 calc((100% - (var(--ess-slides-mobile, 1) - 1) * var(--ess-slider-gap, 10px)) / var(--ess-slides-mobile, 1));
+  }
+
+  .ess-scroll-slider.is-vertical:not(.is-vertical-mobile) {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    max-height: none;
+  }
+}
+
+.ess-slider-static {
+  display: grid;
+  gap: var(--ess-slider-gap, 10px);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.ess-slider-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.ess-slider-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #d0d0d0;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.ess-slider-dot.is-active {
+  background: var(--ess-tier-border-selected);
+  transform: scale(1.25);
+}
+
+/* Thumbnail active state for the gallery. */
+.ess-slider-product-media-thumb > *.is-active img {
+  outline: 2px solid var(--ess-tier-border-selected);
+  outline-offset: -2px;
+}
+
+/* --------------------------------------------- reduced motion + CLS guard */
+
+@media (prefers-reduced-motion: reduce) {
+  .ess-scroll-slider {
+    scroll-behavior: auto;
+  }
+  .ess-bundle-tier,
+  .ess-purchase-toggle__option,
+  .ess-question + * {
+    transition: none;
+  }
+}
+
+/* Reserve space for product images so they do not shift the page as they
+   load. The single biggest CLS win on a PDP. */
+.ess-element-product-media img,
+.ess-product-option-list-left-image img {
+  max-width: 100%;
+  height: auto;
+}
+
+
+/* Newsletter form feedback. The markup in ess-footer-group.json
+   references these two classes but no rules existed, so the messages
+   rendered unstyled. */
+.ess-success {
+    padding-top: 10px;
+    font-size: 60%;
+}
+
+.ess-error {
+    padding-top: 10px;
+    font-size: 60%;
+    color: #b00020;
+}

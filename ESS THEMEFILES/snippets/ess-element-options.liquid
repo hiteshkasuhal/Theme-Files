@@ -1,0 +1,217 @@
+{%- comment -%}
+  ess-element-options  (Buy Options)
+  ----------------------------------
+  Universal bundle / quantity-break selector.
+
+  Replaces the previous hardcoded version, which assumed:
+    - exactly 3 tiers (a literal 1..3 loop)
+    - quantities 1 / 3 / 5
+    - the copy "Buy 2, Get 1 FREE" and "Buy 3, Get 2 FREE"
+    - badges "Most Popular" / "Best Value"
+    - a 20% subscription saving
+    - products supplied by section.settings.collection, used as pseudo-variants
+    - the metafields custom.scent / scent_image / best_seller / new_scent
+    - the label "Inspired by:"
+
+  Nothing above is assumed any more. Tiers are `bundle_tier` blocks, so a store
+  can have 1 tier or 8. All copy, badges, quantities, units, savings style and
+  selling plans are per-tier settings. Prices derive from real variant data.
+
+  Drop this on any store: with zero tiers configured it falls back to a plain
+  single-quantity buy state rather than rendering an empty box.
+{%- endcomment -%}
+
+{%- liquid
+  assign target_product = product
+  if section.settings.product != blank
+    assign target_product = section.settings.product
+  endif
+
+  # Collect the tier blocks that belong to this section.
+  assign tier_count = 0
+  for b in section.blocks
+    if b.type == 'bundle_tier'
+      assign tier_count = tier_count | plus: 1
+    endif
+  endfor
+
+  # Does any tier offer a subscription? Controls whether the toggle renders at
+  # all, so a store with no selling plans never shows a dead switch.
+  assign any_sub = false
+  for v in target_product.variants
+    if v.selling_plan_allocations.size > 0
+      assign any_sub = true
+      break
+    endif
+  endfor
+
+  assign show_toggle = false
+  if any_sub and block.settings.purchase_type != 'onetime_only'
+    assign show_toggle = true
+  endif
+
+  assign default_mode = 'onetime'
+  if any_sub and block.settings.purchase_type == 'subscription_first'
+    assign default_mode = 'subscription'
+  endif
+  if block.settings.purchase_type == 'subscription_only' and any_sub
+    assign default_mode = 'subscription'
+    assign show_toggle = false
+  endif
+-%}
+
+<div
+  class="ess-element ess-element-options {{ block.settings.custom_class }} ess-element-{{ block.id }}"
+  {% if block.settings.custom_id != blank %}id="{{ block.settings.custom_id }}"{% endif %}
+  data-ess-options
+  data-section-id="{{ section.id }}"
+  data-product-id="{{ target_product.id }}"
+  data-purchase-mode="{{ default_mode }}"
+  data-purchase-type="{{ block.settings.purchase_type | default: 'both' }}"
+>
+  {%- comment -%} ------------------------------------- purchase type toggle {%- endcomment -%}
+  {%- if show_toggle -%}
+    <div class="ess-purchase-toggle" role="radiogroup" aria-label="{{ block.settings.toggle_label | default: 'Purchase type' }}">
+      <button
+        type="button"
+        class="ess-purchase-toggle__option{% if default_mode == 'onetime' %} is-selected{% endif %}"
+        role="radio"
+        aria-checked="{% if default_mode == 'onetime' %}true{% else %}false{% endif %}"
+        data-purchase-option="onetime"
+      >
+        <span class="ess-purchase-toggle__radio" aria-hidden="true"></span>
+        <span class="ess-purchase-toggle__text">
+          <span class="ess-purchase-toggle__title">{{ block.settings.onetime_title | default: 'One-time purchase' }}</span>
+          {%- if block.settings.onetime_subtitle != blank -%}
+            <span class="ess-purchase-toggle__subtitle">{{ block.settings.onetime_subtitle }}</span>
+          {%- endif -%}
+        </span>
+      </button>
+
+      <button
+        type="button"
+        class="ess-purchase-toggle__option{% if default_mode == 'subscription' %} is-selected{% endif %}"
+        role="radio"
+        aria-checked="{% if default_mode == 'subscription' %}true{% else %}false{% endif %}"
+        data-purchase-option="subscription"
+      >
+        <span class="ess-purchase-toggle__radio" aria-hidden="true"></span>
+        <span class="ess-purchase-toggle__text">
+          <span class="ess-purchase-toggle__title">
+            {{ block.settings.subscription_title | default: 'Subscribe & save' }}
+          </span>
+          {%- if block.settings.subscription_subtitle != blank -%}
+            <span class="ess-purchase-toggle__subtitle">{{ block.settings.subscription_subtitle }}</span>
+          {%- endif -%}
+        </span>
+        {%- if block.settings.subscription_badge != blank -%}
+          <span class="ess-purchase-toggle__badge">{{ block.settings.subscription_badge }}</span>
+        {%- endif -%}
+      </button>
+    </div>
+
+    {%- comment -%}
+      Delivery frequency. Rendered from the real selling plans on the product,
+      so the options always match what the store actually sells.
+    {%- endcomment -%}
+    {%- if block.settings.show_frequency -%}
+      {%- assign base_v = target_product.selected_or_first_available_variant -%}
+      {%- if base_v.selling_plan_allocations.size > 1 -%}
+        <div class="ess-frequency" data-frequency-wrap{% if default_mode != 'subscription' %} hidden{% endif %}>
+          <label class="ess-frequency__label" for="ess-frequency-{{ block.id }}">
+            {{ block.settings.frequency_label | default: 'Delivery every' }}
+          </label>
+          <select class="ess-frequency__select" id="ess-frequency-{{ block.id }}" data-frequency-select>
+            {%- for alloc in base_v.selling_plan_allocations -%}
+              <option value="{{ alloc.selling_plan.id }}">{{ alloc.selling_plan.name }}</option>
+            {%- endfor -%}
+          </select>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- comment -%} -------------------------------------------------- the tiers {%- endcomment -%}
+  {%- if tier_count > 0 -%}
+    <div class="ess-bundle-tiers" role="radiogroup" aria-label="{{ block.settings.tiers_label | default: 'Choose your bundle' }}" data-bundle-tiers>
+      {%- assign tier_index = 0 -%}
+      {%- for b in section.blocks -%}
+        {%- if b.type == 'bundle_tier' -%}
+          {%- assign tier_index = tier_index | plus: 1 -%}
+          {%- render 'ess-bundle-tier', block: b, product: target_product, tier_index: tier_index -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  {%- else -%}
+    {%- comment -%}
+      Graceful fallback: no tiers configured yet. Still a working buy state,
+      and a nudge in the theme editor instead of silence.
+    {%- endcomment -%}
+    {%- assign fv = target_product.selected_or_first_available_variant -%}
+    <div
+      class="ess-bundle-tiers ess-bundle-tiers--single"
+      data-bundle-tiers
+    >
+      <button
+        type="button"
+        class="ess-bundle-tier is-selected ess-font-body"
+        role="radio"
+        aria-checked="true"
+        data-tier="1"
+        data-variant-id="{{ fv.id }}"
+        data-quantity="1"
+        data-units="1"
+        data-mode="quantity"
+        data-price-onetime="{{ fv.price }}"
+        data-price-subscription="{{ fv.selling_plan_allocations.first.per_delivery_price | default: fv.price }}"
+        data-compare-price="{{ fv.compare_at_price | default: fv.price }}"
+      >
+        <span class="ess-bundle-tier__row">
+          <span class="ess-bundle-tier__radio" aria-hidden="true"></span>
+          <span class="ess-bundle-tier__info">
+            <span class="ess-bundle-tier__title">{{ target_product.title }}</span>
+          </span>
+          <span class="ess-bundle-tier__pricing">
+            <span class="ess-bundle-tier__price">{{ fv.price | money }}</span>
+            {%- if fv.compare_at_price > fv.price -%}
+              <s class="ess-bundle-tier__compare">{{ fv.compare_at_price | money }}</s>
+            {%- endif -%}
+          </span>
+        </span>
+      </button>
+      {%- if request.design_mode -%}
+        <p class="ess-editor-hint">
+          Add <strong>Bundle Tier</strong> blocks to this section to build your quantity breaks.
+        </p>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} ----------------------------------------- quantity stepper {%- endcomment -%}
+  {%- if block.settings.show_quantity_stepper -%}
+    <div class="ess-qty" data-qty-wrap>
+      <label class="ess-qty__label" for="ess-qty-{{ block.id }}">
+        {{ block.settings.quantity_label | default: 'Quantity' }}
+      </label>
+      <div class="ess-qty__control">
+        <button type="button" class="ess-qty__btn" data-qty-minus aria-label="Decrease quantity">&minus;</button>
+        <input
+          class="ess-qty__input"
+          id="ess-qty-{{ block.id }}"
+          type="number"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          value="1"
+          min="1"
+          max="{{ block.settings.quantity_max | default: 99 }}"
+          data-qty-input
+        >
+        <button type="button" class="ess-qty__btn" data-qty-plus aria-label="Increase quantity">+</button>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if block.settings.footnote != blank -%}
+    <p class="ess-element-options__footnote">{{ block.settings.footnote }}</p>
+  {%- endif -%}
+</div>

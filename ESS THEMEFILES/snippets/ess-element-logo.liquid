@@ -1,0 +1,31 @@
+{%  if block.settings.logo != blank %}
+<div class="ess-element ess-element-logo-main {{ block.settings.custom_class }} ess-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+<div class="ess-element-logo ess-media">
+<a href="/">
+{% if block.settings.logo_mobile != blank %}
+ {{ block.settings.logo | image_url: width: 800 | image_tag:
+  loading: 'eager',
+  fetchpriority: 'high',
+  alt:block.settings.logo.alt,
+  class: 'ess-hide-mobile',
+  widths: '375, 550, 750, 800'
+}}   
+ {{ block.settings.logo_mobile | image_url: width: 800 | image_tag:
+  loading: 'eager',
+  fetchpriority: 'high',
+  alt:block.settings.logo_mobile.alt,
+  class: 'ess-hide-desktop',
+  widths: '375, 550, 750, 800'
+}}   
+{% else %}
+ {{ block.settings.logo | image_url: width: 800 | image_tag:
+  loading: 'eager',
+  fetchpriority: 'high',
+  alt:block.settings.logo.alt,
+  widths: '375, 550, 750, 800'
+}} 
+{%  endif %}
+</a>
+</div>
+</div>
+{% endif %}

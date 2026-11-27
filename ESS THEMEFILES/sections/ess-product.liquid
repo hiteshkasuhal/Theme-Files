@@ -1,0 +1,2020 @@
+{%- style -%}
+.ess-section-bg-{{ section.id }} {
+    background-color:{{ section.settings.background_color }};
+    color:{{ section.settings.text_color }};
+    }
+{% if section.settings.background_image != blank %}
+.ess-section-bg-{{ section.id }} {
+      background-image:url({{section.settings.background_image | image_url}});
+    background-size: cover;
+    background-attachment: unset;
+    background-repeat: no-repeat;
+    background-position: center;
+    }
+  {% endif %}
+{% if section.settings.background_image_mobile != blank %}
+  @media screen and (max-width: 915px) {
+    .ess-section-bg-{{ section.id }} {
+      background-image:url({{section.settings.background_image_mobile | image_url}});
+    }
+  }
+  {% endif %}
+  @media screen and (max-width: 915px) {
+    .ess-section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+  @media screen and (min-width: 915px) {
+    .ess-section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }  
+{%- endstyle -%}
+{%- liquid
+  assign seo_product = product
+  if section.settings.product != blank
+    assign seo_product = section.settings.product
+  endif
+-%}
+
+{%- comment -%}
+  Cart configuration. These values used to be variant IDs hardcoded inside
+  ess-pdp.js and ess-element-checkout-button.liquid, which is what stopped the
+  files being reusable on another store. ess-cart.js reads them from here.
+{%- endcomment -%}
+<script type="application/json" id="ess-cart-config">
+  {
+    "protectionVariantId": {{ section.settings.protection_variant_id | strip | json }},
+    "giftVariantId": {{ section.settings.gift_variant_id | strip | json }},
+    "cartDrawerSection": {{ section.settings.cart_drawer_section | default: 'ess-cart-drawer' | json }},
+    {%- comment -%}
+      No `default: true` here on purpose. A checkbox returns false when the
+      merchant unticks it, and `false | default: true` evaluates back to true
+      in Liquid, which would silently ignore the setting.
+    {%- endcomment -%}
+    "cartCountExcludesProtection": {{ section.settings.count_excludes_protection | json }}
+  }
+</script>
+<script>window.ESS_MONEY_FORMAT = {{ shop.money_format | json }};</script>
+
+{%- comment -%}
+  Preload the LCP candidate. On a PDP the first product image is almost always
+  the Largest Contentful Paint element, so fetching it at high priority is the
+  single biggest Core Web Vitals win available here.
+{%- endcomment -%}
+{%- if section.settings.preload_lcp_image and seo_product.featured_image != blank -%}
+  <link
+    rel="preload"
+    as="image"
+    href="{{ seo_product.featured_image | image_url: width: 1200 }}"
+    imagesrcset="{{ seo_product.featured_image | image_url: width: 600 }} 600w, {{ seo_product.featured_image | image_url: width: 900 }} 900w, {{ seo_product.featured_image | image_url: width: 1200 }} 1200w"
+    imagesizes="(max-width: 915px) 100vw, 50vw"
+    fetchpriority="high"
+  >
+{%- endif -%}
+
+{%- comment -%}
+  Product structured data. Prices come straight from the variant objects, so
+  the markup cannot drift from what the store actually charges.
+{%- endcomment -%}
+{%- if section.settings.enable_structured_data and seo_product != blank and seo_product.id != blank -%}
+  {%- capture sd_offers -%}
+    {%- for v in seo_product.variants -%}
+      {
+        "@type": "Offer",
+        "sku": {{ v.sku | default: v.id | json }},
+        "price": "{{ v.price | divided_by: 100.0 }}",
+        "priceCurrency": {{ cart.currency.iso_code | json }},
+        "availability": "https://schema.org/{% if v.available %}InStock{% else %}OutOfStock{% endif %}",
+        "url": "{{ shop.url }}{{ seo_product.url }}?variant={{ v.id }}"
+      }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": {{ seo_product.title | json }},
+      "url": "{{ shop.url }}{{ seo_product.url }}",
+      {% if seo_product.featured_image != blank %}"image": {{ seo_product.featured_image | image_url: width: 1200 | prepend: 'https:' | json }},{% endif %}
+      "description": {{ seo_product.description | strip_html | truncate: 500 | json }},
+      {% if seo_product.vendor != blank %}"brand": { "@type": "Brand", "name": {{ seo_product.vendor | json }} },{% endif %}
+      {% if seo_product.selected_or_first_available_variant.sku != blank %}"sku": {{ seo_product.selected_or_first_available_variant.sku | json }},{% endif %}
+      "offers": [{{ sd_offers }}]
+    }
+  </script>
+{%- endif -%}
+
+<div class="ess-section-bg-{{ section.id }} ess-product {{ section.settings.custom_class }}" {% if section.settings.custom_id != blank %} id="{{ section.settings.custom_id }}" {% endif %} data-section-id="{{ section.id }}">
+  <div class="ess-container ess-section-{{ section.id }}-padding">
+    <div class="ess-product-content ess-text-{{ section.settings.text_alignment }}-desktop ess-text-{{ section.settings.text_alignment_mobile }}-mobile"> 
+    <div class="ess-product-flex">
+    <div class="ess-product-column ess-product-column1">
+      {%- for block in section.blocks -%} 
+            {%- case block.type -%} 
+                {%- when 'product_media' -%} 
+                    {%  render 'ess-element-product-media', block:block %}  
+            {%  endcase %}
+        {%  endfor %}  
+    </div>
+    <div class="ess-product-column ess-product-column2">
+        {%- for block in section.blocks -%} 
+            {%- case block.type -%} 
+                {%- when 'heading' -%} 
+                    {%  render 'ess-element-heading', block:block %} 
+                {%- when 'richtext' -%} 
+                    {%  render 'ess-element-richtext', block:block %} 
+                {%- when 'image' -%} 
+                    {%  render 'ess-element-image', block:block %} 
+                {%- when 'liquid' -%} 
+                    {%  render 'ess-element-liquid', block:block %} 
+                {%- when 'icon_with_text' -%} 
+                    {%  render 'ess-element-icon-with-text', block:block %} 
+                {%- when 'faq' -%} 
+                    {%  render 'ess-element-faq', block:block %} 
+                {%- when 'options' -%} 
+                    {%  render 'ess-element-options', block:block, section:section %} 
+                {%- when 'checkout_button' -%} 
+                    {%  render 'ess-element-checkout-button', block:block %} 
+                {%- when 'icon_with_text_grid' -%} 
+                    {%  render 'ess-element-icon-with-text-grid', block:block %} 
+                {%- when 'variants' -%} 
+                    {%  render 'ess-element-variants', block:block, section:section %} 
+                {%- when 'subscription_widget' -%} 
+                    {%  render 'ess-element-sub-widget', block:block %} 
+                {%- when 'stock' -%} 
+                    {%  render 'ess-element-stock', block:block %} 
+            {%  endcase %}
+        {%  endfor %}  
+    </div>
+    </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Product Stabilizer",
+  "tag": "section",
+  "class": "product",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Design"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "info": "Recommended: 1920x1080px, JPG format, under 200KB"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image (mobile)",
+      "info": "Recommended: 768x1024px, JPG format. Leave empty to use desktop image"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000",
+      "info": "Must have sufficient contrast with background (check https://webaim.org/resources/contrastchecker/)"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment (desktop)",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Top spacing (desktop)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing (desktop)",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Mobile Settings"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment_mobile",
+      "label": "Text alignment (mobile)",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Top spacing (mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom spacing (mobile)",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Cart add-ons"
+    },
+    {
+      "type": "paragraph",
+      "content": "These were hardcoded variant IDs in the old build, which is why the files could not be reused on another store. Leave blank to disable."
+    },
+    {
+      "type": "text",
+      "id": "protection_variant_id",
+      "label": "Shipping protection variant ID",
+      "info": "Added once per cart automatically. Leave blank to turn shipping protection off."
+    },
+    {
+      "type": "text",
+      "id": "gift_variant_id",
+      "label": "Free gift variant ID",
+      "info": "Used by the subscription upgrade link in the cart drawer."
+    },
+    {
+      "type": "checkbox",
+      "id": "count_excludes_protection",
+      "label": "Exclude protection from cart count",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cart_drawer_section",
+      "label": "Cart drawer section filename",
+      "default": "ess-cart-drawer",
+      "info": "Used by the Section Rendering API to refresh only the drawer instead of refetching the whole page."
+    },
+    {
+      "type": "header",
+      "content": "SEO & performance"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_structured_data",
+      "label": "Output Product structured data (JSON-LD)",
+      "default": true,
+      "info": "Adds schema.org Product markup with price and availability, so the page is eligible for rich results. Turn off if an app already outputs it, to avoid duplicates."
+    },
+    {
+      "type": "checkbox",
+      "id": "preload_lcp_image",
+      "label": "Preload the main product image",
+      "default": true,
+      "info": "Preloads the first product image at high priority. This is usually the Largest Contentful Paint element on a PDP."
+    },
+    {
+      "type": "header",
+      "content": "Advanced"
+    },
+    {
+      "type": "text",
+      "id": "custom_id",
+      "label": "Custom CSS ID",
+      "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom CSS class",
+      "info": "For additional styling. Separate multiple classes with spaces"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "Heading",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "Add Your Heading",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "header",
+          "content": "Design"
+        },
+        {
+          "type": "checkbox",
+          "id": "h1",
+          "label": "Use H1",
+          "info": "Checked only for 1 Heading at the top of the page"
+        },
+        {
+          "type": "select",
+          "id": "font_type",
+          "label": "Font",
+          "options": [
+            {
+              "value": "heading",
+              "label": "Heading Font"
+            },
+            {
+              "value": "body",
+              "label": "Body Font"
+            }
+          ],
+          "default": "heading"
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    },
+    {
+      "type": "richtext",
+      "name": "RichText",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Add Your Description</p>",
+          "info": "Supports bold, italic,list,paragraph and links"
+        },
+        {
+          "type": "header",
+          "content": "Design"
+        },
+        {
+          "type": "select",
+          "id": "font_type",
+          "label": "Font",
+          "options": [
+            {
+              "value": "heading",
+              "label": "Heading Font"
+            },
+            {
+              "value": "body",
+              "label": "Body Font"
+            }
+          ],
+          "default": "body"
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link On Image",
+          "info": "Leave empty to not add link on Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Recommended: 768x1024px, JPG format"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Image (mobile)",
+          "info": "Recommended: 768x1024px, JPG format. Leave empty to use desktop image"
+        },
+        {
+          "type": "header",
+          "content": "Loading & Performance"
+        },
+        {
+          "type": "select",
+          "id": "image_loading",
+          "label": "Image loading",
+          "options": [
+            {
+              "value": "eager",
+              "label": "Eager (loads immediately)"
+            },
+            {
+              "value": "lazy",
+              "label": "Lazy (loads when visible)"
+            }
+          ],
+          "default": "lazy",
+          "info": "Use 'Eager' only for images at the top of the page"
+        },
+        {
+          "type": "select",
+          "id": "image_performance",
+          "label": "Image Performance",
+          "options": [
+            {
+              "value": "high",
+              "label": "High (loads immediately)"
+            },
+            {
+              "value": "low",
+              "label": "Low (loads when visible)"
+            }
+          ],
+          "default": "low",
+          "info": "Use 'High' only for images at the top of the page"
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    },
+    {
+      "type": "product_media",
+      "name": "Product Media",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "range",
+          "id": "columns_desktop",
+          "min": 0,
+          "max": 10,
+          "step": 1,
+          "label": "Slides On Desktop",
+          "default": 4
+        },
+        {
+          "type": "header",
+          "content": "Mobile Settings"
+        },
+        {
+          "type": "range",
+          "id": "columns_mobile",
+          "min": 0,
+          "max": 10,
+          "step": 1,
+          "label": "Slides On Mobile",
+          "default": 1
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    },
+    {
+      "type": "product_media_mobile",
+      "name": "Product Media Mobile",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "range",
+          "id": "columns_desktop",
+          "min": 0,
+          "max": 10,
+          "step": 1,
+          "label": "Slides On Desktop",
+          "default": 4
+        },
+        {
+          "type": "header",
+          "content": "Mobile Settings"
+        },
+        {
+          "type": "range",
+          "id": "columns_mobile",
+          "min": 0,
+          "max": 10,
+          "step": 1,
+          "label": "Slides On Mobile",
+          "default": 1
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    },
+    {
+      "type": "product_image",
+      "name": "Product Image",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Recommended: 768x1024px, JPG format"
+        },
+        {
+          "type": "header",
+          "content": "Loading & Performance"
+        },
+        {
+          "type": "select",
+          "id": "image_loading",
+          "label": "Image loading",
+          "options": [
+            {
+              "value": "eager",
+              "label": "Eager (loads immediately)"
+            },
+            {
+              "value": "lazy",
+              "label": "Lazy (loads when visible)"
+            }
+          ],
+          "default": "lazy",
+          "info": "Use 'Eager' only for images at the top of the page"
+        },
+        {
+          "type": "select",
+          "id": "image_performance",
+          "label": "Image Performance",
+          "options": [
+            {
+              "value": "high",
+              "label": "High (loads immediately)"
+            },
+            {
+              "value": "low",
+              "label": "Low (loads when visible)"
+            }
+          ],
+          "default": "low",
+          "info": "Use 'High' only for images at the top of the page"
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    },
+    {
+      "type": "variant_item",
+      "name": "Variant Item",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "range",
+          "id": "variant",
+          "min": 0,
+          "max": 10,
+          "step": 1,
+          "label": "Variant Index",
+          "default": 1
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Title",
+          "default": "Add Your Title",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "subtitle",
+          "label": "SubTitle",
+          "default": "Add Your SubTitle",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "badge",
+          "label": "Badge",
+          "default": "Add Your Badge",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    },
+    {
+      "type": "options",
+      "name": "Buy Options (Bundles)",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Purchase type"
+        },
+        {
+          "type": "select",
+          "id": "purchase_type",
+          "label": "Offer",
+          "options": [
+            {
+              "value": "both",
+              "label": "One-time + Subscription (toggle)"
+            },
+            {
+              "value": "subscription_first",
+              "label": "One-time + Subscription (subscription preselected)"
+            },
+            {
+              "value": "onetime_only",
+              "label": "One-time only"
+            },
+            {
+              "value": "subscription_only",
+              "label": "Subscription only"
+            }
+          ],
+          "default": "both",
+          "info": "The toggle is hidden automatically if the product has no selling plans, so this is safe to leave on 'both'."
+        },
+        {
+          "type": "text",
+          "id": "toggle_label",
+          "label": "Toggle group label",
+          "default": "Purchase type",
+          "info": "Screen-reader label only."
+        },
+        {
+          "type": "text",
+          "id": "onetime_title",
+          "label": "One-time label",
+          "default": "One-time purchase"
+        },
+        {
+          "type": "text",
+          "id": "onetime_subtitle",
+          "label": "One-time sub-label"
+        },
+        {
+          "type": "text",
+          "id": "subscription_title",
+          "label": "Subscription label",
+          "default": "Subscribe & save"
+        },
+        {
+          "type": "text",
+          "id": "subscription_subtitle",
+          "label": "Subscription sub-label",
+          "info": "e.g. No commitment, cancel anytime"
+        },
+        {
+          "type": "text",
+          "id": "subscription_badge",
+          "label": "Subscription badge",
+          "info": "e.g. MOST FLEXIBLE. Leave blank for none."
+        },
+        {
+          "type": "header",
+          "content": "Delivery frequency"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_frequency",
+          "label": "Show frequency picker",
+          "default": true,
+          "info": "Lists the product's real selling plans. Only appears when there is more than one."
+        },
+        {
+          "type": "text",
+          "id": "frequency_label",
+          "label": "Frequency label",
+          "default": "Delivery every"
+        },
+        {
+          "type": "header",
+          "content": "Bundle tiers"
+        },
+        {
+          "type": "text",
+          "id": "tiers_label",
+          "label": "Tier group label",
+          "default": "Choose your bundle",
+          "info": "Screen-reader label only. Add 'Bundle Tier' blocks below to build the tiers."
+        },
+        {
+          "type": "header",
+          "content": "Quantity stepper"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_quantity_stepper",
+          "label": "Show quantity stepper",
+          "default": false,
+          "info": "A +/- control that multiplies the selected tier. Leave off if your tiers already cover the quantities."
+        },
+        {
+          "type": "text",
+          "id": "quantity_label",
+          "label": "Quantity label",
+          "default": "Quantity"
+        },
+        {
+          "type": "number",
+          "id": "quantity_max",
+          "label": "Maximum quantity",
+          "default": 99
+        },
+        {
+          "type": "header",
+          "content": "Footnote"
+        },
+        {
+          "type": "richtext",
+          "id": "footnote",
+          "label": "Footnote",
+          "info": "Small print under the tiers, e.g. shipping or cancellation terms."
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    },
+    {
+      "type": "bundle_tier",
+      "name": "Bundle Tier",
+      "settings": [
+        {
+          "type": "header",
+          "content": "What this tier buys"
+        },
+        {
+          "type": "select",
+          "id": "tier_mode",
+          "label": "Tier type",
+          "options": [
+            {
+              "value": "quantity",
+              "label": "Quantity of one variant"
+            },
+            {
+              "value": "variant",
+              "label": "A specific variant (multipack)"
+            }
+          ],
+          "default": "quantity",
+          "info": "IMPORTANT: 'Quantity' multiplies the base price, so a real discount needs a Shopify automatic discount or Function behind it. 'Variant' uses that variant's own price, so the card and checkout always agree. Prefer 'Variant' for multipacks."
+        },
+        {
+          "type": "number",
+          "id": "quantity",
+          "label": "Quantity to add to cart",
+          "default": 1,
+          "info": "Quantity mode only. How many of the variant go in the cart."
+        },
+        {
+          "type": "number",
+          "id": "variant_index",
+          "label": "Variant position",
+          "default": 1,
+          "info": "Variant mode only. 1 = first variant of the product, 2 = second, and so on. Position keeps this reusable across stores."
+        },
+        {
+          "type": "text",
+          "id": "variant_id",
+          "label": "Variant ID (optional override)",
+          "info": "Variant mode only. Exact variant ID. More precise but store-specific, so leave blank if you reuse this section on other stores."
+        },
+        {
+          "type": "number",
+          "id": "units_received",
+          "label": "Units the customer receives",
+          "default": 1,
+          "info": "Used for the per-unit price and the item pickers. For a 3-pack variant, enter 3."
+        },
+        {
+          "type": "header",
+          "content": "Copy"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "info": "e.g. 3 Bottles. Leave blank to generate it from units x product title."
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Sub-label",
+          "info": "e.g. Most people start here"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge",
+          "info": "e.g. MOST POPULAR or BEST VALUE. Leave blank for none."
+        },
+        {
+          "type": "text",
+          "id": "unit_noun",
+          "label": "Unit noun",
+          "default": "unit",
+          "info": "Used in the per-unit price, e.g. 'bottle' renders $24.99 / bottle."
+        },
+        {
+          "type": "text",
+          "id": "sold_out_text",
+          "label": "Sold out text",
+          "default": "Sold out"
+        },
+        {
+          "type": "header",
+          "content": "Pricing display"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_unit_price",
+          "label": "Show per-unit price",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_savings",
+          "label": "Show savings",
+          "default": true
+        },
+        {
+          "type": "select",
+          "id": "savings_style",
+          "label": "Savings style",
+          "options": [
+            {
+              "value": "percent",
+              "label": "Percentage (20% off)"
+            },
+            {
+              "value": "amount",
+              "label": "Amount (Save $10.00)"
+            }
+          ],
+          "default": "percent"
+        },
+        {
+          "type": "number",
+          "id": "compare_at_override",
+          "label": "Compare-at override",
+          "info": "Optional. A strike-through price in your store currency, e.g. 89.97. Leave blank to use the variant's real compare-at price. Only set this if it is a genuine former price."
+        },
+        {
+          "type": "header",
+          "content": "Subscription"
+        },
+        {
+          "type": "text",
+          "id": "selling_plan_group",
+          "label": "Selling plan group",
+          "info": "Optional. Group ID, or part of the plan name to match. Leave blank to use the product's first available plan."
+        },
+        {
+          "type": "header",
+          "content": "Per-item pickers"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_item_pickers",
+          "label": "Let the customer choose each item",
+          "default": false,
+          "info": "Shows one dropdown per unit, for mix-and-match bundles (e.g. pick 3 flavours). Only renders when units is 2 or more."
+        },
+        {
+          "type": "collection",
+          "id": "picker_collection",
+          "label": "Options source",
+          "info": "Products in this collection become the choices. Leave blank to use the product's own variants."
+        },
+        {
+          "type": "text",
+          "id": "picker_label",
+          "label": "Picker label",
+          "default": "Choose option"
+        },
+        {
+          "type": "header",
+          "content": "Selection"
+        },
+        {
+          "type": "checkbox",
+          "id": "preselected",
+          "label": "Preselected",
+          "default": false,
+          "info": "Tick this on exactly one tier."
+        },
+        {
+          "type": "checkbox",
+          "id": "highlight",
+          "label": "Visually highlight",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    },
+    {
+      "type": "checkout_button",
+      "name": "Checkout Button",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "CHECKOUT NOW - ",
+          "info": "Supports bold and italic"
+        },
+        {
+          "type": "text",
+          "id": "sold_out_label",
+          "label": "Sold out label",
+          "default": "Sold out"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "subtext",
+          "label": "Text under button",
+          "info": "e.g. Free shipping over $50"
+        },
+        {
+          "type": "checkbox",
+          "id": "add_gift",
+          "label": "Also add the free gift",
+          "default": false,
+          "info": "Adds the 'Free gift variant ID' set in this section's Cart add-ons settings."
+        },
+        {
+          "type": "header",
+          "content": "Design"
+        },
+        {
+          "type": "select",
+          "id": "font_type",
+          "label": "Font",
+          "options": [
+            {
+              "value": "heading",
+              "label": "Heading Font"
+            },
+            {
+              "value": "body",
+              "label": "Body Font"
+            }
+          ],
+          "default": "body"
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    },
+    {
+      "type": "icon_with_text",
+      "name": "Icon With Text",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Icon",
+          "info": "Recommended: 768x1024px, JPG format"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Image (mobile)",
+          "info": "Recommended: 768x1024px, JPG format. Leave empty to use desktop image"
+        },
+        {
+          "type": "liquid",
+          "id": "liquid",
+          "label": "icon Code",
+          "default": "Add Your Code Here",
+          "info": "Supports Html and Liquid Codes"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Title",
+          "default": "Add Your Title",
+          "info": "Supports bold and italic"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Add Your Description</p>",
+          "info": "Supports bold, italic,list,paragraph and links"
+        },
+        {
+          "type": "header",
+          "content": "Design"
+        },
+        {
+          "type": "select",
+          "id": "font_type_title",
+          "label": "Title Font",
+          "options": [
+            {
+              "value": "heading",
+              "label": "Heading Font"
+            },
+            {
+              "value": "body",
+              "label": "Body Font"
+            }
+          ],
+          "default": "heading"
+        },
+        {
+          "type": "select",
+          "id": "font_type_text",
+          "label": "Text Font",
+          "options": [
+            {
+              "value": "heading",
+              "label": "Heading Font"
+            },
+            {
+              "value": "body",
+              "label": "Body Font"
+            }
+          ],
+          "default": "body"
+        },
+        {
+          "type": "header",
+          "content": "Loading & Performance"
+        },
+        {
+          "type": "select",
+          "id": "image_loading",
+          "label": "Image loading",
+          "options": [
+            {
+              "value": "eager",
+              "label": "Eager (loads immediately)"
+            },
+            {
+              "value": "lazy",
+              "label": "Lazy (loads when visible)"
+            }
+          ],
+          "default": "lazy",
+          "info": "Use 'Eager' only for images at the top of the page"
+        },
+        {
+          "type": "select",
+          "id": "image_performance",
+          "label": "Image Performance",
+          "options": [
+            {
+              "value": "high",
+              "label": "High (loads immediately)"
+            },
+            {
+              "value": "low",
+              "label": "Low (loads when visible)"
+            }
+          ],
+          "default": "low",
+          "info": "Use 'High' only for images at the top of the page"
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    },
+    {
+      "type": "liquid",
+      "name": "Liquid Code",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "liquid",
+          "id": "liquid",
+          "label": "Liquid Code",
+          "default": "Add Your Code Here",
+          "info": "Supports Html,CSS,Js and Liquid Codes"
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    },
+    {
+      "type": "video",
+      "name": "Video",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video"
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    },
+    {
+      "type": "faq",
+      "name": "Faq",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "question",
+          "label": "Question",
+          "default": "Add Your Question Here",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Add Your Answer Here</p>",
+          "info": "Supports bold, italic,list,paragraph and links"
+        },
+        {
+          "type": "header",
+          "content": "Design"
+        },
+        {
+          "type": "select",
+          "id": "font_type",
+          "label": "Question Font",
+          "options": [
+            {
+              "value": "heading",
+              "label": "Heading Font"
+            },
+            {
+              "value": "body",
+              "label": "Body Font"
+            }
+          ],
+          "default": "heading"
+        },
+        {
+          "type": "select",
+          "id": "font_type_answer",
+          "label": "Answer Font",
+          "options": [
+            {
+              "value": "heading",
+              "label": "Heading Font"
+            },
+            {
+              "value": "body",
+              "label": "Body Font"
+            }
+          ],
+          "default": "body"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Icon",
+          "info": "Recommended: 768x1024px, JPG format"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Image (mobile)",
+          "info": "Recommended: 768x1024px, JPG format. Leave empty to use desktop image"
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    },
+    {
+      "type": "icon_with_text_grid",
+      "name": "icon With Text Grid",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    },
+    {
+      "type": "icon_with_text_item",
+      "name": "Icon With Text Item",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Icon",
+          "info": "Recommended: 768x1024px, JPG format"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Image (mobile)",
+          "info": "Recommended: 768x1024px, JPG format. Leave empty to use desktop image"
+        },
+        {
+          "type": "liquid",
+          "id": "liquid",
+          "label": "icon Code",
+          "default": "Add Your Code Here",
+          "info": "Supports Html and Liquid Codes"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Title",
+          "default": "Add Your Title",
+          "info": "Supports bold and italic"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Add Your Description</p>",
+          "info": "Supports bold, italic,list,paragraph and links"
+        },
+        {
+          "type": "header",
+          "content": "Design"
+        },
+        {
+          "type": "select",
+          "id": "font_type_title",
+          "label": "Title Font",
+          "options": [
+            {
+              "value": "heading",
+              "label": "Heading Font"
+            },
+            {
+              "value": "body",
+              "label": "Body Font"
+            }
+          ],
+          "default": "heading"
+        },
+        {
+          "type": "select",
+          "id": "font_type_text",
+          "label": "Text Font",
+          "options": [
+            {
+              "value": "heading",
+              "label": "Heading Font"
+            },
+            {
+              "value": "body",
+              "label": "Body Font"
+            }
+          ],
+          "default": "body"
+        },
+        {
+          "type": "header",
+          "content": "Loading & Performance"
+        },
+        {
+          "type": "select",
+          "id": "image_loading",
+          "label": "Image loading",
+          "options": [
+            {
+              "value": "eager",
+              "label": "Eager (loads immediately)"
+            },
+            {
+              "value": "lazy",
+              "label": "Lazy (loads when visible)"
+            }
+          ],
+          "default": "lazy",
+          "info": "Use 'Eager' only for images at the top of the page"
+        },
+        {
+          "type": "select",
+          "id": "image_performance",
+          "label": "Image Performance",
+          "options": [
+            {
+              "value": "high",
+              "label": "High (loads immediately)"
+            },
+            {
+              "value": "low",
+              "label": "Low (loads when visible)"
+            }
+          ],
+          "default": "low",
+          "info": "Use 'High' only for images at the top of the page"
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    },
+    {
+      "type": "variants",
+      "name": "Product Variants",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    },
+    {
+      "type": "variant",
+      "name": "Product Variant",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "checkbox",
+          "id": "active",
+          "label": "Selected Option",
+          "default": false
+        },
+        {
+          "type": "number",
+          "id": "index",
+          "label": "Variant Index",
+          "default": 1
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Title",
+          "default": "Add Your Title",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "Add Your Text",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "badge",
+          "label": "Badge",
+          "default": "Add Your Badge",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Recommended: 768x1024px, JPG format"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Image (mobile)",
+          "info": "Recommended: 768x1024px, JPG format. Leave empty to use desktop image"
+        },
+        {
+          "type": "header",
+          "content": "Loading & Performance"
+        },
+        {
+          "type": "select",
+          "id": "image_loading",
+          "label": "Image loading",
+          "options": [
+            {
+              "value": "eager",
+              "label": "Eager (loads immediately)"
+            },
+            {
+              "value": "lazy",
+              "label": "Lazy (loads when visible)"
+            }
+          ],
+          "default": "lazy",
+          "info": "Use 'Eager' only for images at the top of the page"
+        },
+        {
+          "type": "select",
+          "id": "image_performance",
+          "label": "Image Performance",
+          "options": [
+            {
+              "value": "high",
+              "label": "High (loads immediately)"
+            },
+            {
+              "value": "low",
+              "label": "Low (loads when visible)"
+            }
+          ],
+          "default": "low",
+          "info": "Use 'High' only for images at the top of the page"
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    },
+    {
+      "type": "subscription_widget",
+      "name": "Subscription Widget",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "sub_badge",
+          "label": "Subscription Badge",
+          "default": "92% of Customers Choose to Subscribe",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "sub_title",
+          "label": "Subscription Title",
+          "default": "Subscribe & <strong>Save 20%</strong>",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "richtext",
+          "id": "sub_text",
+          "label": "Subscription Text",
+          "default": "<p>Add Your Text</p>",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Subscription Image",
+          "info": "Recommended: 768x1024px, JPG format"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "one_time_title",
+          "label": "One Time Title",
+          "default": "One-Time Purchase",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "product",
+          "id": "free_product1",
+          "label": "Free Product1"
+        },
+        {
+          "type": "image_picker",
+          "id": "free_image1",
+          "label": "Free Product1 Image",
+          "info": "Recommended: 768x1024px, JPG format"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "free_title1",
+          "label": "Free Product1 Title",
+          "default": "FREE Pill box when you  subscribe",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "free_text1",
+          "label": "Free Product1 Text",
+          "default": "Worth [price]",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "free_badge1",
+          "label": "Free Product1 Badge",
+          "default": "Add Baddge",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "product",
+          "id": "free_product2",
+          "label": "Free Product2"
+        },
+        {
+          "type": "image_picker",
+          "id": "free_image2",
+          "label": "Free Product2 Image",
+          "info": "Recommended: 768x1024px, JPG format"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "free_title2",
+          "label": "Free Product2 Title",
+          "default": "FREE Pill box when you  subscribe",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "free_text2",
+          "label": "Free Product2 Text",
+          "default": "Worth [price]",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "free_badge2",
+          "label": "Free Product2 Badge",
+          "default": "Add Baddge",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "product",
+          "id": "free_product3",
+          "label": "Free Product3"
+        },
+        {
+          "type": "image_picker",
+          "id": "free_image3",
+          "label": "Free Product3 Image",
+          "info": "Recommended: 768x1024px, JPG format"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "free_title3",
+          "label": "Free Product3 Title",
+          "default": "FREE Pill box when you  subscribe",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "free_text3",
+          "label": "Free Product3 Text",
+          "default": "Worth [price]",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "free_badge3",
+          "label": "Free Product3 Badge",
+          "default": "Add Baddge",
+          "info": "Supports bold, italic, and links"
+        },
+        {
+          "type": "header",
+          "content": "Loading & Performance"
+        },
+        {
+          "type": "select",
+          "id": "image_loading",
+          "label": "Image loading",
+          "options": [
+            {
+              "value": "eager",
+              "label": "Eager (loads immediately)"
+            },
+            {
+              "value": "lazy",
+              "label": "Lazy (loads when visible)"
+            }
+          ],
+          "default": "lazy",
+          "info": "Use 'Eager' only for images at the top of the page"
+        },
+        {
+          "type": "select",
+          "id": "image_performance",
+          "label": "Image Performance",
+          "options": [
+            {
+              "value": "high",
+              "label": "High (loads immediately)"
+            },
+            {
+              "value": "low",
+              "label": "Low (loads when visible)"
+            }
+          ],
+          "default": "low",
+          "info": "Use 'High' only for images at the top of the page"
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    },
+    {
+      "type": "stock",
+      "name": "Stock",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Add Your Description</p>",
+          "info": "Supports bold, italic,list,paragraph and links."
+        },
+        {
+          "type": "number",
+          "id": "date",
+          "label": "Date",
+          "default": 3,
+          "info": "Use [date] in above text to display date"
+        },
+        {
+          "type": "header",
+          "content": "Design"
+        },
+        {
+          "type": "select",
+          "id": "font_type",
+          "label": "Font",
+          "options": [
+            {
+              "value": "heading",
+              "label": "Heading Font"
+            },
+            {
+              "value": "body",
+              "label": "Body Font"
+            }
+          ],
+          "default": "body"
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "text",
+          "id": "custom_id",
+          "label": "Custom CSS ID",
+          "info": "For anchor links or custom styling. Use lowercase with hyphens (e.g., 'about-section')"
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom CSS class",
+          "info": "For additional styling. Separate multiple classes with spaces"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product",
+      "category": "ESS"
+    }
+  ]
+}
+{% endschema %}
+

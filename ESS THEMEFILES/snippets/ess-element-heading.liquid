@@ -1,0 +1,7 @@
+ <div class="ess-element ess-element-heading-main {{ block.settings.custom_class }} ess-element-{{ block.id }}"{% if block.settings.custom_id != blank %} id="{{ block.settings.custom_id }}"{% endif %}>
+{% if block.settings.h1 != true %}
+<h2 class="ess-element-heading ess-font-{{ block.settings.font_type }}">{{ block.settings.text }}</h2>
+{% else %}
+<h1 class="ess-element-heading ess-font-{{ block.settings.font_type }}">{{ block.settings.text }}</h1>
+{% endif %} 
+</div>

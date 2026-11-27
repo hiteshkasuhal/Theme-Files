@@ -1,0 +1,52 @@
+<style>
+:root {
+--ess-heading-font: {{ section.settings.heading_font }};
+--ess-body-font: {{ section.settings.body_font }};
+--ess-container-width: {{ section.settings.container_width | default: 1508 }}px;
+}
+</style>
+
+{% schema %}
+{
+  "name": "Page Settings",
+  "tag": "header",
+  "class": "ess-page-settings",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Fonts"
+    },
+    {
+      "type": "text",
+      "id": "heading_font",
+      "label": "Heading Font Name",
+      "default": "Bebas Neue",
+      "info": "Heading Font Name"
+    },
+    {
+      "type": "text",
+      "id": "body_font",
+      "label": "Body Font Name",
+      "default": "Aeonik",
+      "info": "Body Font Name"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "number",
+      "id": "container_width",
+      "label": "Container Width (px)",
+      "default": 1508,
+      "info": "Any width in pixels. Previously a slider capped at 1500-1600px, which made wider or narrower layouts impossible."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page Settings",
+      "category": "ESS"
+    }
+  ]
+}
+{% endschema %}
